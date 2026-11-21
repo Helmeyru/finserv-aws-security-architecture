@@ -135,3 +135,14 @@ The final submission is ready when the application, security monitoring, and log
 
 
 \*\*Final testing status:\*\* In progress.
+
+## Day 21 - Application Integration Testing (2026-11-21)
+- PASS: API Gateway GET /health returned HTTP 200 and healthy status.
+- PASS: Private Lambda was Active in the expected VPC and two private subnets.
+- PASS: DynamoDB finserv-transactions was ACTIVE.
+- PASS: Direct Lambda invocation returned HTTP statusCode 200 with verified=true.
+- PASS: Synthetic DynamoDB PutItem and GetItem succeeded.
+- PASS: CloudWatch Logs confirmed transaction saved and retrieved.
+- Verified transaction ID: c91949aa-52ba-4b69-a922-a58a918af4d6
+- Lambda duration: 377.98 ms; maximum memory used: 90 MB.
+- NOTE: API Gateway exposes GET /health only; /transaction is not configured.
