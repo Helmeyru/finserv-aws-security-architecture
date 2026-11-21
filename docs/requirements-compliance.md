@@ -3,8 +3,8 @@
 **Project:** FinServ — AWS Secure Multi-Tier Architecture
 **Program:** Manara AWS Solutions Architect Learning Path
 **AWS Region:** `us-east-1`
-**Review date:** November 21, 2026
-**Evidence basis:** Repository source templates and recorded Day 21–23 tests. Statuses are not claims of fresh live-resource verification.
+**Review date:** November 22, 2026
+**Evidence basis:** Repository source templates and recorded Day 21–24 tests. Statuses are not claims of fresh live-resource verification.
 
 ## Status definitions
 
@@ -43,7 +43,7 @@
 | IAM least privilege | Scoped Lambda permissions for DynamoDB and restricted security groups reviewed | Verified for reviewed policies; not a complete IAM audit |
 | IAM permission boundaries | No successfully applied boundary established | Not demonstrated |
 | Organizations SCP deny-root policy | SCP reference/validation only; not applied to an AWS Organization | Reference only |
-| EventBridge + Lambda incident response | EventBridge rule and incident-response Lambda templates exist; end-to-end event trigger and notification not verified | Implemented / not end-to-end tested |
+| EventBridge + Lambda incident response | November 22: synthetic high-severity GuardDuty finding matched EventBridge, invoked Lambda, and produced ESCALATE; 1 invocation, 0 errors. SNS notifications remained disabled. | VERIFIED — incident processing; SNS notification not tested |
 | CloudWatch and SNS alerting | Three alarms configured, direct SNS test email received | Verified direct SNS; alarm-triggered notification untested |
 | Compliance/incident evidence | [Security test report](../tests/security-test-results.md) and CloudFormation YAML | Verified documentation |
 
