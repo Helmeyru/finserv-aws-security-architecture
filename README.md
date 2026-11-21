@@ -93,6 +93,14 @@ Several templates use configurable CloudFormation parameters to avoid hardcoded 
 
 These templates are educational Infrastructure as Code examples. They have dependencies and are **not intended to be deployed all at once without reviewing the required parameters, deployment order, resource names, and existing resources**.
 
+
+### Project Documentation
+
+- [Solution Architecture Diagram](architecture/finserv-aws-security-architecture.png)
+- [CloudFormation Deployment and Verification Guide](docs/deployment-guide.md)
+- [Project 8 Requirements Compliance Matrix](docs/requirements-compliance.md)
+- [Security Testing Results](tests/security-test-results.md)
+
 ## 6. Monitoring and Incident Response
 
 The monitoring implementation includes three CloudWatch alarms:
@@ -183,7 +191,6 @@ The goal of this project is to demonstrate practical AWS solutions architecture 
 **Project:** Manara AWS Solutions Architect learning path — Project 8
 
 **Portfolio focus:** AWS Cloud Security Engineering
-
 
 
 
