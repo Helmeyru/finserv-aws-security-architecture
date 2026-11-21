@@ -125,7 +125,16 @@ Important limitations:
 
 - No claim is made that this lab has undergone a formal security audit, penetration test, or production readiness assessment.
 
-## 8. Repository Structure
+
+## 8. Compliance with Project 8 Objectives
+The implementation has been assessed against the Manara Project 8 objectives.
+
+[View the Project 8 Requirements Compliance Matrix](docs/requirements-compliance.md)
+
+The matrix identifies verified implementations, partial demonstrations, and security capabilities that require additional testing.
+
+
+## 9. Repository Structure
 
 ```text
 
@@ -145,11 +154,11 @@ finserv-aws-security-architecture/
 
 ```
 
-## 9. Tools and Technologies
+## 10. Tools and Technologies
 
 AWS CloudFormation, AWS CLI, PowerShell, IAM, VPC, EC2 Security Groups, S3, KMS, Lambda, API Gateway, DynamoDB, CloudFront, AWS WAF, CloudTrail, AWS Config, GuardDuty, Security Hub, CloudWatch, SNS, Systems Manager, RDS, and EBS.
 
-## 10. Project Objective
+## 11. Project Objective
 
 The goal of this project is to demonstrate practical AWS solutions architecture and cloud security engineering skills, including:
 
