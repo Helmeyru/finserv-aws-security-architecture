@@ -159,3 +159,15 @@ The final submission is ready when the application, security monitoring, and log
 - SNS test MessageId: 44207327-55e0-546d-b5f7-105ce2dbec62
 - NOTE: Direct SNS delivery tested; automatic alarm-to-SNS delivery not tested.
 - NOTE: Additional GuardDuty protection features remain disabled in this low-cost lab.
+
+## Day 23 - IAM, Encryption, Networking and Cost Audit (2026-11-21)
+- PASS: Lambda DynamoDB IAM policy permits only PutItem, GetItem and DescribeTable on the FinServ table.
+- PASS: S3 default encryption uses customer-managed SSE-KMS; Bucket Key enabled and SSE-C blocked.
+- PASS: DynamoDB gateway endpoint available and associated with the application route table.
+- PASS: Application security group restricts ingress to web-tier TCP 8080 and egress to database TCP 5432 and DynamoDB HTTPS.
+- PASS: No RDS instances, EBS volumes or manual RDS snapshots found in us-east-1.
+- COST: November 1-21 account-level unblended cost approximately USD 1.65; billing may lag.
+- COST: KMS is the largest reported service cost at approximately USD 1.13.
+- PASS: finserv-security-trail was logging with no reported delivery errors.
+- REVIEW: Separate us-east-2 security-trail has IsLogging=false and historical LatestDeliveryError=NoSuchBucket; ownership and destination require investigation.
+- NOTE: No AWS infrastructure was modified during this audit.
