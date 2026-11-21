@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: FinServ Security Lab - AWS Security Hub CSPM
+
+Resources:
+  FinServSecurityHub:
+    Type: AWS::SecurityHub::Hub
+    Properties:
+      EnableDefaultStandards: false
+      AutoEnableControls: false
+      ControlFindingGenerator: SECURITY_CONTROL
+      Tags:
+        Project: Manara-Project-8
+        Environment: Security-Lab

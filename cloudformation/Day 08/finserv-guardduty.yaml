@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: FinServ Security Lab - Amazon GuardDuty
+
+Resources:
+  FinServGuardDutyDetector:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+      FindingPublishingFrequency: FIFTEEN_MINUTES
+      Features:
+        - Name: S3_DATA_EVENTS
+          Status: DISABLED
+
+        - Name: EKS_AUDIT_LOGS
+          Status: DISABLED
+
+        - Name: EBS_MALWARE_PROTECTION
+          Status: DISABLED
+
+        - Name: RDS_LOGIN_EVENTS
+          Status: DISABLED
+
+        - Name: LAMBDA_NETWORK_LOGS
+          Status: DISABLED
+
+        - Name: RUNTIME_MONITORING
+          Status: DISABLED
+
+        - Name: AI_PROTECTION
+          Status: DISABLED
+
+        - Name: AI_ANALYST
+          Status: DISABLED

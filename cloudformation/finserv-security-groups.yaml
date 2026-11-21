@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Manara SAA Project 8 - security groups for a future financial services
+  three-tier workload. Creates only security groups and rules; no instances,
+  databases, load balancers or other billable compute resources.
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: ID of the existing finserv-security-lab-vpc
+
+  DynamoDBPrefixListId:
+    Type: String
+    Description: AWS-managed DynamoDB prefix list ID for the deployment region
+    AllowedPattern: "^pl-[0-9a-f]+$"
+
+Resources:
+  WebSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Web tier - no public inbound rules until an ALB and edge protections are ready
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 127.0.0.1/32
+          Description: Placeholder to disable AWS default unrestricted outbound rule
+      Tags:
+        - Key: Name
+          Value: finserv-web-sg
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+
+  AppSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Private app tier - only accepts TCP 8080 from the web security group
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 127.0.0.1/32
+          Description: Placeholder to disable AWS default unrestricted outbound rule
+      Tags:
+        - Key: Name
+          Value: finserv-app-sg
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+
+  DbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Isolated PostgreSQL data tier - only accepts TCP 5432 from app security group
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: "-1"
+          CidrIp: 127.0.0.1/32
+          Description: Placeholder to disable AWS default unrestricted outbound rule
+      Tags:
+        - Key: Name
+          Value: finserv-db-sg
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+
+  WebToAppIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !GetAtt AppSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 8080
+      ToPort: 8080
+      SourceSecurityGroupId: !GetAtt WebSecurityGroup.GroupId
+      Description: App traffic from web tier only
+
+  WebToAppEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt WebSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 8080
+      ToPort: 8080
+      DestinationSecurityGroupId: !GetAtt AppSecurityGroup.GroupId
+      Description: Only application port to app tier
+
+  AppToDbIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !GetAtt DbSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      SourceSecurityGroupId: !GetAtt AppSecurityGroup.GroupId
+      Description: PostgreSQL connections from application tier only
+
+  AppToDbEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt AppSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
+      DestinationSecurityGroupId: !GetAtt DbSecurityGroup.GroupId
+      Description: PostgreSQL connections to database tier only
+
+  FinServAppDynamoDBEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref AppSecurityGroup
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      DestinationPrefixListId: !Ref DynamoDBPrefixListId
+      Description: Allow HTTPS to DynamoDB via Gateway Endpoint
+
+Outputs:
+  WebSecurityGroupId:
+    Description: Security group for the future web/ALB tier
+    Value: !Ref WebSecurityGroup
+  AppSecurityGroupId:
+    Description: Security group for the private app tier
+    Value: !Ref AppSecurityGroup
+  DbSecurityGroupId:
+    Description: Security group for a private PostgreSQL database
+    Value: !Ref DbSecurityGroup

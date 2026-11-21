@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Manara Project 8 - Day 17.
+  Existing CloudFront AWS WAF Web ACL import baseline.
+
+Resources:
+  FinServWebACL:
+    Type: AWS::WAFv2::WebACL
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+
+    Properties:
+      Name: CreatedByCloudFront-66bc4431
+      Scope: CLOUDFRONT
+
+      DefaultAction:
+        Allow: {}
+
+      OnSourceDDoSProtectionConfig:
+        ALBLowReputationMode: ACTIVE_UNDER_DDOS
+
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        CloudWatchMetricsEnabled: true
+        MetricName: CreatedByCloudFront-66bc4431
+
+      Rules:
+        # Rule 1 - Amazon IP Reputation
+        - Name: AWS-AWSManagedRulesAmazonIpReputationList
+          Priority: 0
+          OverrideAction:
+            Count: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesAmazonIpReputationList
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: AWS-AWSManagedRulesAmazonIpReputationList
+
+        # Rule 2 - AWS Core Rule Set
+        - Name: AWS-AWSManagedRulesCommonRuleSet
+          Priority: 1
+          OverrideAction:
+            Count: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: AWS-AWSManagedRulesCommonRuleSet
+
+        # Rule 3 - Known Bad Inputs
+        - Name: AWS-AWSManagedRulesKnownBadInputsRuleSet
+          Priority: 2
+          OverrideAction:
+            Count: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: AWS-AWSManagedRulesKnownBadInputsRuleSet
+
+        # Rule 4 - Controlled BLOCK demonstration
+        - Name: FinServ-Day17-Block-Test
+          Priority: 3
+
+          Action:
+            Block: {}
+
+          Statement:
+            ByteMatchStatement:
+              SearchString: /finserv-waf-block-test
+              FieldToMatch:
+                UriPath: {}
+              PositionalConstraint: EXACTLY
+              TextTransformations:
+                - Priority: 0
+                  Type: NONE
+
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: FinServDay17BlockTest

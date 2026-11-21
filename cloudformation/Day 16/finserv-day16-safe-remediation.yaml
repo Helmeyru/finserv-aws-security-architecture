@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Manara Project 8 - Day 16 Safe S3 Encryption Automation
+
+Parameters:
+  TestBucketName:
+    Type: String
+    Description: Approved disposable S3 bucket for remediation testing
+
+Resources:
+  FinServSafeEncryptionRunbook:
+    Type: AWS::SSM::Document
+    Properties:
+      Name: FinServ-SafeS3EncryptionRemediation
+      DocumentType: Automation
+      DocumentFormat: YAML
+      Content:
+        schemaVersion: "0.3"
+        description: >
+          Configure SSE-S3 encryption and explicitly block SSE-C
+          on the FinServ Day 16 test bucket.
+        assumeRole: "{{ AutomationAssumeRole }}"
+        parameters:
+          BucketName:
+            type: String
+            description: Approved disposable FinServ S3 test bucket
+            default: !Ref TestBucketName
+            allowedValues:
+              - !Ref TestBucketName
+          AutomationAssumeRole:
+            type: String
+            description: IAM role for automation
+        mainSteps:
+          - name: ConfigureSafeEncryption
+            action: aws:executeAwsApi
+            isEnd: true
+            inputs:
+              Service: s3
+              Api: PutBucketEncryption
+              Bucket: "{{ BucketName }}"
+              ServerSideEncryptionConfiguration:
+                Rules:
+                  - ApplyServerSideEncryptionByDefault:
+                      SSEAlgorithm: AES256
+                    BlockedEncryptionTypes:
+                      EncryptionType:
+                        - SSE-C
+
+Outputs:
+  RunbookName:
+    Value: !Ref FinServSafeEncryptionRunbook

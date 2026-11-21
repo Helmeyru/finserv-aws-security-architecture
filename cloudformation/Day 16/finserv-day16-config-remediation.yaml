@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Manara Project 8 - Day 16
+  Scoped AWS Config remediation for a disposable S3 bucket.
+
+Parameters:
+  TestBucketName:
+    Type: String
+    Description: Approved disposable S3 bucket for remediation testing
+
+  RemediationRoleArn:
+    Type: String
+    Description: IAM role ARN used by the SSM Automation runbook
+
+  RemediationDocumentName:
+    Type: String
+    Default: FinServ-SafeS3EncryptionRemediation
+    Description: Name of the approved SSM Automation document
+
+Resources:
+  FinServDay16EncryptionRule:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: finserv-day16-s3-encryption-check
+      Description: Check encryption on Day 16 test bucket only
+      Scope:
+        ComplianceResourceTypes:
+          - AWS::S3::Bucket
+        ComplianceResourceId: !Ref TestBucketName
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED
+
+  FinServDay16Remediation:
+    Type: AWS::Config::RemediationConfiguration
+    DependsOn: FinServDay16EncryptionRule
+    Properties:
+      ConfigRuleName: !Ref FinServDay16EncryptionRule
+      ResourceType: AWS::S3::Bucket
+      TargetType: SSM_DOCUMENT
+      TargetId: !Ref RemediationDocumentName
+      Automatic: false
+      MaximumAutomaticAttempts: 1
+      RetryAttemptSeconds: 60
+
+      Parameters:
+        BucketName:
+          ResourceValue:
+            Value: RESOURCE_ID
+        AutomationAssumeRole:
+          StaticValue:
+            Values:
+              - !Ref RemediationRoleArn
+
+Outputs:
+  ConfigRuleName:
+    Value: !Ref FinServDay16EncryptionRule
+
+  RemediationDocument:
+    Value: FinServ-SafeS3EncryptionRemediation

@@ -1,0 +1,157 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: FinServ Security Lab - Automated Incident Response
+
+Resources:
+  FinServIncidentResponseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: finserv-incident-response-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: finserv-incident-response-logging
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: WriteLambdaLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/finserv-incident-response:log-stream:*"
+        - PolicyName: finserv-sns-publish
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: PublishSecurityAlerts
+                Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:finserv-security-alerts"
+
+  FinServIncidentResponseLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/finserv-incident-response
+      RetentionInDays: 7
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Environment
+          Value: Security-Lab
+
+  FinServIncidentResponseFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: FinServIncidentResponseLogGroup
+    Properties:
+      FunctionName: finserv-incident-response
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt FinServIncidentResponseRole.Arn
+      Timeout: 10
+      MemorySize: 128
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !Sub 'arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:finserv-security-alerts'
+          ENABLE_NOTIFICATIONS: 'false'
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import boto3
+
+          sns = boto3.client("sns")
+          TOPIC_ARN = os.environ["SNS_TOPIC_ARN"]
+
+          def lambda_handler(event, context):
+              detail = event.get("detail", {})
+              severity = float(detail.get("severity", 0))
+              finding_type = detail.get("type", "UNKNOWN")
+              finding_id = detail.get("id", "UNKNOWN")
+
+              # Robust check for AWS sample findings
+              is_sample = (
+                  detail.get("sample") is True
+                  or str(detail.get("title", "")).upper().startswith("[SAMPLE]")
+              )
+
+              if event.get("source") != "aws.guardduty":
+                  action = "IGNORE"
+              elif severity >= 7:
+                  action = "ESCALATE"
+              else:
+                  action = "REVIEW"
+
+              result = {
+                  "findingId": finding_id,
+                  "findingType": finding_type,
+                  "severity": severity,
+                  "action": action,
+                  "sample": is_sample
+              }
+
+              # Safety circuit breaker: only publish if explicitly enabled
+              if (
+                  action == "ESCALATE"
+                  and not is_sample
+                  and os.environ.get("ENABLE_NOTIFICATIONS", "false").lower() == "true"
+              ):
+                  message = (
+                      "FinServ Security Alert\n"
+                      f"Finding ID: {finding_id}\n"
+                      f"Finding Type: {finding_type}\n"
+                      f"Severity: {severity}\n"
+                      f"Action: {action}\n"
+                  )
+
+                  response = sns.publish(
+                      TopicArn=TOPIC_ARN,
+                      Subject="FinServ HIGH Security Alert",
+                      Message=message
+                  )
+
+                  result["notificationStatus"] = "PUBLISHED"
+                  result["messageId"] = response["MessageId"]
+              else:
+                  result["notificationStatus"] = "SKIPPED"
+
+              print(json.dumps(result))
+              return result
+
+  FinServGuardDutyEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: finserv-guardduty-high-severity
+      Description: Route high-severity GuardDuty findings to incident response
+      EventBusName: default
+      State: ENABLED
+      EventPattern: |
+        {
+          "source": ["aws.guardduty"],
+          "detail-type": ["GuardDuty Finding"],
+          "detail": {
+            "severity": [
+              {
+                "numeric": [">=", 7]
+              }
+            ]
+          }
+        }
+      Targets:
+        - Id: FinServIncidentResponseTarget
+          Arn: !GetAtt FinServIncidentResponseFunction.Arn
+
+  FinServEventBridgeInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref FinServIncidentResponseFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt FinServGuardDutyEventRule.Arn

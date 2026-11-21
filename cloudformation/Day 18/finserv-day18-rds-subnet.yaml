@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Manara Project 8 - Day 18.
+  Private RDS DB subnet group using isolated database subnets.
+
+Parameters:
+  DatabaseSubnet1Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: First isolated database subnet
+
+  DatabaseSubnet2Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: Second isolated database subnet
+
+Resources:
+  FinServPrivateDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+
+    Properties:
+      DBSubnetGroupName: finserv-day18-private-db
+      DBSubnetGroupDescription: "Private DB subnet group across two Availability Zones."
+
+      SubnetIds:
+        - !Ref DatabaseSubnet1Id
+        - !Ref DatabaseSubnet2Id
+
+      Tags:
+        - Key: Project
+          Value: Manara-SAA-P8
+
+        - Key: Environment
+          Value: Lab
+
+        - Key: Purpose
+          Value: Private-RDS-Demonstration
+
+Outputs:
+  DBSubnetGroupName:
+    Description: Name of the private RDS subnet group
+    Value: !Ref FinServPrivateDBSubnetGroup

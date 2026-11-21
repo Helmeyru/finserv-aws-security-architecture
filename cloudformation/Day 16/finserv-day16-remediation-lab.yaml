@@ -1,0 +1,59 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >
+  Manara Project 8 - Day 16.
+  Disposable S3 remediation lab with least-privilege
+  Systems Manager Automation permissions.
+
+Resources:
+
+  FinServRemediationTestBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub 'finserv-day16-remediation-${AWS::AccountId}-${AWS::Region}'
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Purpose
+          Value: Day16-Remediation-Test
+
+  FinServRemediationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: finserv-day16-ssm-remediation-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ssm.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: FinServTestBucketEncryption
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:GetEncryptionConfiguration
+                  - s3:PutEncryptionConfiguration
+                Resource: !GetAtt FinServRemediationTestBucket.Arn
+
+Outputs:
+  TestBucketName:
+    Description: Disposable S3 remediation test bucket
+    Value: !Ref FinServRemediationTestBucket
+
+  AutomationRoleArn:
+    Description: Systems Manager remediation role ARN
+    Value: !GetAtt FinServRemediationRole.Arn

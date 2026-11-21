@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "Manara Project 8 - CloudTrail protection SCP reference design."
+
+Resources:
+  FinServProtectCloudTrailSCP:
+    Type: AWS::Organizations::Policy
+    Properties:
+      Name: FinServ-Protect-CloudTrail
+      Description: "Prevent member accounts from disabling or deleting CloudTrail trails."
+      Type: SERVICE_CONTROL_POLICY
+
+      Content:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: DenyCloudTrailStopAndDelete
+            Effect: Deny
+            Action:
+              - cloudtrail:StopLogging
+              - cloudtrail:DeleteTrail
+            Resource: "*"
+
+Outputs:
+  PolicyId:
+    Description: SCP identifier
+    Value: !Ref FinServProtectCloudTrailSCP

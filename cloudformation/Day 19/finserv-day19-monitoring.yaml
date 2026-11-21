@@ -1,0 +1,104 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "Manara Project 8 - Day 19 CloudWatch monitoring alarms."
+
+Parameters:
+  SNSTopicArn:
+    Type: String
+    Description: ARN of the SNS topic receiving security alerts
+
+  ApplicationFunctionName:
+    Type: String
+    Default: finserv-private-app
+    Description: Name of the application Lambda function
+
+  IncidentResponseFunctionName:
+    Type: String
+    Default: finserv-incident-response
+    Description: Name of the incident-response Lambda function
+
+Resources:
+  FinServApplicationErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: finserv-app-lambda-errors
+      AlarmDescription: "Alert when application Lambda reports errors."
+      Namespace: AWS/Lambda
+      MetricName: Errors
+
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ApplicationFunctionName
+
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopicArn
+
+  FinServApplicationThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: finserv-app-lambda-throttles
+      AlarmDescription: "Alert when application Lambda is throttled."
+      Namespace: AWS/Lambda
+      MetricName: Throttles
+
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref ApplicationFunctionName
+
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopicArn
+
+  FinServIncidentResponseErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: finserv-incident-response-errors
+      AlarmDescription: "Alert when incident-response Lambda reports errors."
+      Namespace: AWS/Lambda
+      MetricName: Errors
+
+      Dimensions:
+        - Name: FunctionName
+          Value: !Ref IncidentResponseFunctionName
+
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      DatapointsToAlarm: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+
+      ActionsEnabled: true
+      AlarmActions:
+        - !Ref SNSTopicArn
+
+Outputs:
+  ApplicationErrorsAlarm:
+    Description: Application Lambda error alarm name
+    Value: !Ref FinServApplicationErrorsAlarm
+
+  ApplicationThrottlesAlarm:
+    Description: Application Lambda throttle alarm name
+    Value: !Ref FinServApplicationThrottlesAlarm
+
+  IncidentResponseErrorsAlarm:
+    Description: Incident-response Lambda error alarm name
+    Value: !Ref FinServIncidentResponseErrorsAlarm

@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Manara Project 8 - Day 14
+  Allow private Lambda HTTPS access to DynamoDB.
+
+Parameters:
+  AppSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Existing application security group
+
+  DynamoDBPrefixListId:
+    Type: String
+    Description: AWS-managed DynamoDB prefix list ID
+    AllowedPattern: "^pl-[0-9a-f]+$"
+
+Resources:
+  FinServAppDynamoDBEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !Ref AppSecurityGroupId
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+      DestinationPrefixListId: !Ref DynamoDBPrefixListId
+      Description: Allow HTTPS to DynamoDB gateway endpoint
+
+Outputs:
+  SecurityGroupId:
+    Value: !Ref AppSecurityGroupId
+    Description: Application security group

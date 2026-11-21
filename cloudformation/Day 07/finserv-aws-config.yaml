@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: FinServ AWS Config Security Monitoring
+
+Resources:
+  FinServConfigBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+      Tags:
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Purpose
+          Value: AWS-Config
+
+  FinServConfigBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FinServConfigBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+
+          # Check bucket ACL
+          - Sid: AWSConfigBucketAclCheck
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:GetBucketAcl
+            Resource: !Sub 'arn:${AWS::Partition}:s3:::${FinServConfigBucket}'
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref 'AWS::AccountId'
+
+          # Check bucket existence
+          - Sid: AWSConfigBucketExistenceCheck
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:ListBucket
+            Resource: !Sub 'arn:${AWS::Partition}:s3:::${FinServConfigBucket}'
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref 'AWS::AccountId'
+
+          # Deliver configuration files
+          - Sid: AWSConfigBucketDelivery
+            Effect: Allow
+            Principal:
+              Service: config.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub 'arn:${AWS::Partition}:s3:::${FinServConfigBucket}/AWSLogs/${AWS::AccountId}/Config/*'
+            Condition:
+              StringEquals:
+                aws:SourceAccount: !Ref 'AWS::AccountId'
+                s3:x-amz-acl: bucket-owner-full-control

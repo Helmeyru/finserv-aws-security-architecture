@@ -1,0 +1,105 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: FinServ Security Lab - Secure Web Tier
+
+Resources:
+  FinServWebBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Environment
+          Value: Security-Lab
+        - Key: Tier
+          Value: Web
+
+  FinServOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: finserv-web-oac
+        Description: OAC for FinServ private S3 web bucket
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  FinServCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: FinServ Security Lab Web Tier
+
+        DefaultRootObject: index.html
+
+        HttpVersion: http2
+
+        Origins:
+          - Id: FinServS3Origin
+            DomainName: !GetAtt FinServWebBucket.RegionalDomainName
+            OriginAccessControlId: !Ref FinServOriginAccessControl
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+
+        DefaultCacheBehavior:
+          TargetOriginId: FinServS3Origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Environment
+          Value: Security-Lab
+
+  FinServWebBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FinServWebBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowCloudFrontReadOnly
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action:
+              - s3:GetObject
+            Resource: !Sub '${FinServWebBucket.Arn}/*'
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub 'arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${FinServCloudFrontDistribution}'
+
+Outputs:
+  WebBucketName:
+    Description: Name of the private web bucket
+    Value: !Ref FinServWebBucket
+
+  WebBucketArn:
+    Description: ARN of the private web bucket
+    Value: !GetAtt FinServWebBucket.Arn

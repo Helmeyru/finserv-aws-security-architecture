@@ -1,0 +1,102 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: FinServ Security Lab - Automated Incident Response
+
+Resources:
+  FinServIncidentResponseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: finserv-incident-response-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: finserv-incident-response-logging
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: WriteLambdaLogs
+                Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/finserv-incident-response:log-stream:*"
+
+  FinServIncidentResponseLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/finserv-incident-response
+      RetentionInDays: 7
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Environment
+          Value: Security-Lab
+
+  FinServIncidentResponseFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: FinServIncidentResponseLogGroup
+    Properties:
+      FunctionName: finserv-incident-response
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt FinServIncidentResponseRole.Arn
+      Timeout: 10
+      MemorySize: 128
+      Code:
+        ZipFile: |
+          import json
+
+          def lambda_handler(event, context):
+              detail = event.get("detail", {})
+              severity = float(detail.get("severity", 0))
+              finding_type = detail.get("type", "UNKNOWN")
+
+              if event.get("source") != "aws.guardduty":
+                  action = "IGNORE"
+              elif severity >= 7:
+                  action = "ESCALATE"
+              else:
+                  action = "REVIEW"
+
+              result = {
+                  "findingType": finding_type,
+                  "severity": severity,
+                  "action": action
+              }
+
+              print(json.dumps(result))
+              return result
+
+  FinServGuardDutyEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: finserv-guardduty-high-severity
+      Description: Route high-severity GuardDuty findings to incident response
+      EventBusName: default
+      State: ENABLED
+      EventPattern:
+        source:
+          - aws.guardduty
+        detail-type:
+          - GuardDuty Finding
+        detail:
+          severity:
+            - numeric:
+                - ">="
+                - 7
+      Targets:
+        - Id: FinServIncidentResponseTarget
+          Arn: !GetAtt FinServIncidentResponseFunction.Arn
+
+  FinServEventBridgeInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref FinServIncidentResponseFunction
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt FinServGuardDutyEventRule.Arn

@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Manara Project 8 - Day 14 Secure Data Tier"
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Existing FinServ VPC
+
+  AppRouteTableId:
+    Type: String
+    Description: Route table used by the private application subnets
+    AllowedPattern: "^rtb-[0-9a-f]+$"
+
+Resources:
+  FinServTransactionsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: finserv-transactions
+      BillingMode: PAY_PER_REQUEST
+
+      AttributeDefinitions:
+        - AttributeName: TransactionId
+          AttributeType: S
+
+      KeySchema:
+        - AttributeName: TransactionId
+          KeyType: HASH
+
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Environment
+          Value: Lab
+
+  FinServDynamoDBEndpoint:
+    Type: AWS::EC2::VPCEndpoint
+    Properties:
+      VpcId: !Ref VpcId
+      VpcEndpointType: Gateway
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.dynamodb"
+
+      RouteTableIds:
+        - !Ref AppRouteTableId
+
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowFinServTableAccess
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - dynamodb:DescribeTable
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+            Resource: !GetAtt FinServTransactionsTable.Arn
+
+Outputs:
+  TableName:
+    Description: FinServ transactions table
+    Value: !Ref FinServTransactionsTable
+
+  TableArn:
+    Description: DynamoDB table ARN
+    Value: !GetAtt FinServTransactionsTable.Arn
+
+  DynamoDBEndpointId:
+    Description: DynamoDB gateway endpoint ID
+    Value: !Ref FinServDynamoDBEndpoint

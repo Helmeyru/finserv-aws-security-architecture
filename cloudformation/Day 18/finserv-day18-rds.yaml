@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: "Manara Project 8 - Day 18 temporary encrypted PostgreSQL RDS demonstration."
+
+Parameters:
+  DatabaseSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security group for the private RDS instance
+
+  DatabaseSubnetGroupName:
+    Type: String
+    Default: finserv-day18-private-db
+    Description: Existing private RDS subnet group
+
+Resources:
+  FinServDay18PostgreSQL:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+    Properties:
+      DBInstanceIdentifier: finserv-day18-postgres
+      Engine: postgres
+      DBInstanceClass: db.t4g.micro
+
+      AllocatedStorage: 20
+      StorageType: gp2
+      StorageEncrypted: true
+
+      DBSubnetGroupName: !Ref DatabaseSubnetGroupName
+      VPCSecurityGroups:
+        - !Ref DatabaseSecurityGroupId
+      PubliclyAccessible: false
+      MultiAZ: false
+
+      MasterUsername: finservadmin
+      ManageMasterUserPassword: true
+
+      BackupRetentionPeriod: 0
+      DeletionProtection: false
+
+      Tags:
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+        - Key: Purpose
+          Value: RDS-Encryption-Rotation-Demo
+
+Outputs:
+  DBIdentifier:
+    Description: Temporary PostgreSQL DB identifier
+    Value: !Ref FinServDay18PostgreSQL
+
+  MasterSecretArn:
+    Description: RDS-managed Secrets Manager secret ARN
+    Value: !GetAtt FinServDay18PostgreSQL.MasterUserSecret.SecretArn

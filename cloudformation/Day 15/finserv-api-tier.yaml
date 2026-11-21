@@ -1,0 +1,76 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >
+  Manara Project 8 - Day 15
+  Secure HTTP API for the FinServ application health check.
+
+Resources:
+
+  FinServHttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: finserv-health-api
+      Description: Public read-only health API for FinServ lab
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - https://d2o71fsxst6k13.cloudfront.net
+        AllowMethods:
+          - GET
+        AllowHeaders:
+          - content-type
+        MaxAge: 300
+
+  FinServLambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref FinServHttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationMethod: POST
+      IntegrationUri: !Sub
+        - arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionArn}/invocations
+        - FunctionArn: !Sub arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:finserv-private-app
+      PayloadFormatVersion: '2.0'
+      TimeoutInMillis: 10000
+
+  FinServHealthRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref FinServHttpApi
+      RouteKey: 'GET /health'
+      AuthorizationType: NONE
+      Target: !Sub integrations/${FinServLambdaIntegration}
+
+  FinServDefaultStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref FinServHttpApi
+      StageName: '$default'
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 5
+        ThrottlingRateLimit: 2
+
+  FinServApiInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: finserv-private-app
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub
+        arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${FinServHttpApi}/*/GET/health
+
+Outputs:
+
+  ApiId:
+    Description: FinServ HTTP API ID
+    Value: !Ref FinServHttpApi
+
+  ApiEndpoint:
+    Description: Base HTTPS API endpoint
+    Value: !GetAtt FinServHttpApi.ApiEndpoint
+
+  HealthEndpoint:
+    Description: Public health-check URL
+    Value: !Sub '${FinServHttpApi.ApiEndpoint}/health'

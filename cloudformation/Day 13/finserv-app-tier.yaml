@@ -1,0 +1,163 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Manara Project 8 - Day 13 Private Application Tier"
+
+Parameters:
+  AppSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: Security group for the private Lambda function
+
+  PrivateSubnet1Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: First private application subnet
+
+  PrivateSubnet2Id:
+    Type: AWS::EC2::Subnet::Id
+    Description: Second private application subnet
+
+  DynamoDBTableName:
+    Type: String
+    Default: finserv-transactions
+    Description: Name of the DynamoDB transactions table
+
+Resources:
+  FinServAppRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: finserv-app-lambda-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+
+      Policies:
+        - PolicyName: FinServDynamoDBAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowFinServTransactions
+                Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:DescribeTable
+                Resource: !Sub "arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${DynamoDBTableName}"
+
+  FinServAppLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/finserv-private-app
+      RetentionInDays: 7
+
+  FinServAppFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: FinServAppLogGroup
+    Properties:
+      FunctionName: finserv-private-app
+      Description: Private FinServ backend with DynamoDB
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt FinServAppRole.Arn
+      MemorySize: 128
+      Timeout: 15
+
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref AppSecurityGroupId
+        SubnetIds:
+          - !Ref PrivateSubnet1Id
+          - !Ref PrivateSubnet2Id
+
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref DynamoDBTableName
+
+      Code:
+        ZipFile: |
+          import json
+          import os
+          import uuid
+          import logging
+          import boto3
+
+          logger = logging.getLogger()
+          logger.setLevel(logging.INFO)
+
+          dynamodb = boto3.resource("dynamodb")
+          table = dynamodb.Table(os.environ["TABLE_NAME"])
+
+          def lambda_handler(event, context):
+
+              # Public health-check endpoint (read-only)
+              if (
+                  event.get("requestContext", {}).get("http", {}).get("method") == "GET"
+                  and event.get("rawPath") == "/health"
+              ):
+                  logger.info("Public health check requested")
+
+                  return {
+                      "statusCode": 200,
+                      "headers": {
+                          "Content-Type": "application/json"
+                      },
+                      "body": json.dumps({
+                          "application": "FinServ Security Lab",
+                          "status": "healthy",
+                          "service": "finserv-private-app"
+                      })
+                  }
+
+
+              transaction_id = str(uuid.uuid4())
+
+              transaction = {
+                  "TransactionId": transaction_id,
+                  "Amount": 100,
+                  "Currency": "USD",
+                  "Status": "TEST",
+                  "Description": "Synthetic Manara P8 transaction"
+              }
+
+              table.put_item(Item=transaction)
+              logger.info("Synthetic transaction saved")
+
+              result = table.get_item(
+                  Key={"TransactionId": transaction_id}
+              )
+
+              saved_item = result.get("Item")
+
+              if saved_item is None:
+                  raise RuntimeError("Transaction not found")
+
+              logger.info("Synthetic transaction retrieved")
+
+              return {
+                  "statusCode": 200,
+                  "body": json.dumps({
+                      "status": "success",
+                      "operation": "PutItem + GetItem",
+                      "transactionId": transaction_id,
+                      "verified": True,
+                      "amount": int(saved_item["Amount"]),
+                      "currency": saved_item["Currency"]
+                  })
+              }
+
+Outputs:
+  AppFunctionName:
+    Description: Private application Lambda function
+    Value: !Ref FinServAppFunction
+
+  AppFunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt FinServAppFunction.Arn
+
+  AppLogGroup:
+    Description: CloudWatch log group
+    Value: !Ref FinServAppLogGroup

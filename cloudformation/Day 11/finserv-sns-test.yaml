@@ -1,0 +1,71 @@
+
+AWSTemplateFormatVersion: '2010-09-09'
+Description: FinServ Day 11 - Temporary Lambda to SNS Test
+
+Resources:
+  TestLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/finserv-sns-test
+      RetentionInDays: 1
+
+  TestLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: FinServTestPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Sub 'arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:finserv-security-alerts'
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: !Sub 'arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/finserv-sns-test:log-stream:*'
+
+  TestLambdaFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: TestLogGroup
+    Properties:
+      FunctionName: finserv-sns-test
+      Runtime: python3.12
+      Handler: index.lambda_handler
+      Role: !GetAtt TestLambdaRole.Arn
+      Timeout: 10
+      MemorySize: 128
+      Code:
+        ZipFile: |
+          import boto3
+          import os
+
+          sns = boto3.client("sns")
+
+          def lambda_handler(event, context):
+              response = sns.publish(
+                  TopicArn=os.environ["SNS_TOPIC_ARN"],
+                  Subject="FinServ Day 11 - Lambda SNS Test",
+                  Message=(
+                      "TEST ONLY - Manara Project 8 Day 11.\n"
+                      "This notification was sent by a temporary AWS Lambda.\n"
+                      "No real security incident has occurred."
+                  )
+              )
+              print("Test notification published:", response["MessageId"])
+              return {
+                  "status": "PUBLISHED",
+                  "messageId": response["MessageId"]
+              }
+      Environment:
+        Variables:
+          SNS_TOPIC_ARN: !Sub 'arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:finserv-security-alerts'

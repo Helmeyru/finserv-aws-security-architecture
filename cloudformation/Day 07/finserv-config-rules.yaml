@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: FinServ AWS Config Security Compliance Rules
+
+Resources:
+
+  FinServS3EncryptionRule:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: finserv-s3-encryption-check
+      Description: Check S3 bucket encryption
+      Scope:
+        ComplianceResourceTypes:
+          - AWS::S3::Bucket
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_SERVER_SIDE_ENCRYPTION_ENABLED
+
+  FinServS3PublicReadRule:
+    Type: AWS::Config::ConfigRule
+    Properties:
+      ConfigRuleName: finserv-s3-public-read-check
+      Description: Detect public read access on S3 buckets
+      Scope:
+        ComplianceResourceTypes:
+          - AWS::S3::Bucket
+      Source:
+        Owner: AWS
+        SourceIdentifier: S3_BUCKET_PUBLIC_READ_PROHIBITED

@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description: >
+  Manara Project 8 - Day 18.
+  Temporary encrypted Amazon EBS volume demonstration.
+
+Resources:
+  FinServEncryptedEBSVolume:
+    Type: AWS::EC2::Volume
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+    Properties:
+      AvailabilityZone: us-east-1a
+      VolumeType: gp3
+      Size: 1
+      Encrypted: true
+      KmsKeyId: alias/aws/ebs
+
+      Tags:
+        - Key: Name
+          Value: finserv-day18-encrypted-ebs
+
+        - Key: Project
+          Value: Manara-SAA-P8
+
+        - Key: Environment
+          Value: Lab
+
+        - Key: Purpose
+          Value: EBS-Encryption-Demo
+
+Outputs:
+  VolumeId:
+    Description: Encrypted EBS volume ID
+    Value: !Ref FinServEncryptedEBSVolume
+
+  VolumeAZ:
+    Description: Availability Zone
+    Value: us-east-1a

@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: FinServ IAM Least Privilege Role
+
+Parameters:
+  S3ObjectArn:
+    Type: String
+    Description: ARN of the S3 object this role can read
+    AllowedPattern: "^arn:aws[a-zA-Z-]*:s3:::.+/.+$"
+
+  KMSKeyArn:
+    Type: String
+    Description: ARN of the KMS key used for decrypting the S3 object
+    AllowedPattern: "^arn:aws[a-zA-Z-]*:kms:[a-z0-9-]+:[0-9]{12}:key/.+$"
+
+Resources:
+  FinServDataReaderRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: finserv-data-reader-role
+
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+      Policies:
+        - PolicyName: finserv-data-reader-inline-policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: AllowS3Read
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                Resource: !Ref S3ObjectArn
+
+              - Sid: AllowKMSDecrypt
+                Effect: Allow
+                Action:
+                  - kms:Decrypt
+                Resource: !Ref KMSKeyArn

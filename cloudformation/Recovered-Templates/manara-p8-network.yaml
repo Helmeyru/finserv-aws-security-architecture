@@ -1,0 +1,219 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Manara SAA Project 8 - low-cost networking foundation in us-east-1.
+  Two public, two private application, and two isolated database subnets
+  across two Availability Zones. No NAT gateway, Elastic IP, or compute.
+
+Resources:
+  ProjectVpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.20.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: finserv-security-lab-vpc
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: manara-p8-igw
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  GatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref ProjectVpc
+      InternetGatewayId: !Ref InternetGateway
+
+  PublicSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVpc
+      CidrBlock: 10.20.1.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: manara-p8-public-a
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  PublicSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVpc
+      CidrBlock: 10.20.2.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: manara-p8-public-b
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  PrivateAppSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVpc
+      CidrBlock: 10.20.11.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: manara-p8-app-a
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  PrivateAppSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVpc
+      CidrBlock: 10.20.12.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: manara-p8-app-b
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  IsolatedDbSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVpc
+      CidrBlock: 10.20.21.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: manara-p8-db-a
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  IsolatedDbSubnetB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref ProjectVpc
+      CidrBlock: 10.20.22.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      Tags:
+        - Key: Name
+          Value: manara-p8-db-b
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ProjectVpc
+      Tags:
+        - Key: Name
+          Value: manara-p8-public-rt
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  PublicDefaultRoute:
+    Type: AWS::EC2::Route
+    DependsOn: GatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PrivateAppRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ProjectVpc
+      Tags:
+        - Key: Name
+          Value: manara-p8-private-app-rt
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  IsolatedDbRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref ProjectVpc
+      Tags:
+        - Key: Name
+          Value: manara-p8-isolated-db-rt
+        - Key: Project
+          Value: Manara-SAA-P8
+
+  PublicAssocA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref PublicRouteTable
+
+  PublicAssocB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref PublicRouteTable
+
+  PrivateAppAssocA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateAppSubnetA
+      RouteTableId: !Ref PrivateAppRouteTable
+
+  PrivateAppAssocB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivateAppSubnetB
+      RouteTableId: !Ref PrivateAppRouteTable
+
+  IsolatedDbAssocA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref IsolatedDbSubnetA
+      RouteTableId: !Ref IsolatedDbRouteTable
+
+  IsolatedDbAssocB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref IsolatedDbSubnetB
+      RouteTableId: !Ref IsolatedDbRouteTable
+
+Outputs:
+  VpcId:
+    Description: VPC ID for Manara Project 8
+    Value: !Ref ProjectVpc
+  PublicSubnetIds:
+    Description: Public subnet IDs in two availability zones
+    Value: !Join [",", [!Ref PublicSubnetA, !Ref PublicSubnetB]]
+  PrivateAppSubnetIds:
+    Description: Private application subnet IDs in two availability zones
+    Value: !Join [",", [!Ref PrivateAppSubnetA, !Ref PrivateAppSubnetB]]
+  IsolatedDbSubnetIds:
+    Description: Isolated database subnet IDs in two availability zones
+    Value: !Join [",", [!Ref IsolatedDbSubnetA, !Ref IsolatedDbSubnetB]]

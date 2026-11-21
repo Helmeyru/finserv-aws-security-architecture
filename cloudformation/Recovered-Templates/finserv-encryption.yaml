@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Manara SAA Project 8 - low-cost encryption lab. Creates one customer-managed
+  symmetric KMS key and a private S3 bucket using SSE-KMS by default.
+
+Resources:
+  FinservDataKey:
+    Type: AWS::KMS::Key
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      Description: Customer-managed encryption key for Manara P8 synthetic lab data
+      KeySpec: SYMMETRIC_DEFAULT
+      KeyUsage: ENCRYPT_DECRYPT
+      EnableKeyRotation: true
+      PendingWindowInDays: 7
+      KeyPolicy:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowAccountToDelegateKeyPermissionsViaIAM
+            Effect: Allow
+            Principal:
+              AWS: !Sub 'arn:${AWS::Partition}:iam::${AWS::AccountId}:root'
+            Action: 'kms:*'
+            Resource: '*'
+      Tags:
+        - Key: Name
+          Value: finserv-security-lab-key
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+
+  FinservDataKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/finserv-security-lab-data
+      TargetKeyId: !Ref FinservDataKey
+
+  FinservDataBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: !GetAtt FinservDataKey.Arn
+            BucketKeyEnabled: true
+      Tags:
+        - Key: Name
+          Value: finserv-security-lab-data
+        - Key: Project
+          Value: Manara-SAA-P8
+        - Key: Environment
+          Value: Lab
+
+  FinservDataBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FinservDataBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: DenyRequestsWithoutTLS
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !GetAtt FinservDataBucket.Arn
+              - !Sub '${FinservDataBucket.Arn}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+
+Outputs:
+  KmsKeyArn:
+    Description: ARN of the customer-managed KMS key
+    Value: !GetAtt FinservDataKey.Arn
+  KmsAlias:
+    Description: Alias of the customer-managed KMS key
+    Value: !Ref FinservDataKeyAlias
+  DataBucketName:
+    Description: Private SSE-KMS-encrypted bucket for SYNTHETIC data only
+    Value: !Ref FinservDataBucket

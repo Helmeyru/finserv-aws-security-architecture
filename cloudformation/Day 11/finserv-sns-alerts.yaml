@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: FinServ Security Lab - SNS Security Alerts
+
+Resources:
+  FinServSecurityAlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: finserv-security-alerts
+      DisplayName: FinServ Security Alerts
+      Tags:
+        - Key: Project
+          Value: Manara-Project-8
+        - Key: Environment
+          Value: Security-Lab
+
+Outputs:
+  SecurityAlertsTopicArn:
+    Description: ARN of the FinServ security alerts topic
+    Value: !Ref FinServSecurityAlertsTopic
