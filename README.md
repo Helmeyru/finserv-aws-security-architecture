@@ -105,7 +105,7 @@ The monitoring implementation includes three CloudWatch alarms:
 
 CloudWatch Logs retention was configured for seven days for the monitored Lambda functions.
 
-SNS notification delivery and final integration checks are part of the final testing phase.
+Direct SNS email delivery was verified on November 21, 2026. Automatic CloudWatch alarm notifications and end-to-end EventBridge incident response remain untested.
 
 ## 7. Implementation Status and Limitations
 
@@ -175,9 +175,8 @@ The goal of this project is to demonstrate practical AWS solutions architecture 
 
 **Portfolio focus:** AWS Cloud Security Engineering
 
-\+
 
-&#x09;
+
 
 ### AWS Architecture Diagram
 
