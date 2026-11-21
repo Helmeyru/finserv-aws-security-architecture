@@ -179,5 +179,11 @@ The goal of this project is to demonstrate practical AWS solutions architecture 
 
 &#x09;
 
-## Architecture Diagram
-[View the AWS architecture diagram](architecture/architecture.md)
+### AWS Architecture Diagram
+
+![FinServ AWS Secure Multi-Tier Architecture](architecture/finserv-aws-security-architecture.png)
+
+**Architecture files:**
+- [Editable AWS diagram (draw.io)](architecture/finserv-aws-security-architecture.drawio)
+- [Mermaid architecture diagram](architecture/architecture.md)
+
