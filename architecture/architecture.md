@@ -1,3 +1,4 @@
+```mermaid
 flowchart TB
     U["Users and API Clients"]
 
@@ -50,3 +51,4 @@ flowchart TB
     CONFIG -. "Compliance" .-> SSM
     IAM -. "Permissions" .-> L
     KMS -. "Encryption" .-> S3
+```

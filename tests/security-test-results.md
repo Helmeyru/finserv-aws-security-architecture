@@ -1,28 +1,18 @@
-\# FinServ — Security Testing and Verification
+# FinServ — Security Testing and Verification
 
+**Project:** Manara AWS Project 8
 
+**Region:** us-east-1
 
-\*\*Project:\*\* Manara AWS Project 8
+**Environment:** AWS Security Lab
 
-\*\*Region:\*\* us-east-1
+**Status:** Initial verification completed; final integration testing pending
 
-\*\*Environment:\*\* AWS Security Lab
-
-\*\*Status:\*\* Initial verification completed; final integration testing pending
-
-
-
-\## 1. Purpose
-
-
+## 1. Purpose
 
 This document records the security controls implemented and tested during the project. It distinguishes confirmed test results from work still requiring final verification.
 
-
-
-\## 2. Completed Tests
-
-
+## 2. Completed Tests
 
 | Security control | Verification | Result |
 
@@ -58,15 +48,9 @@ This document records the security controls implemented and tested during the pr
 
 | SNS | Verified email subscription confirmation | PASS — Subscription |
 
-
-
-\## 3. Final Tests — Pending
-
-
+## 3. Final Tests — Pending
 
 These checks are reserved for Days 21–24.
-
-
 
 | Test | Status |
 
@@ -86,55 +70,41 @@ These checks are reserved for Days 21–24.
 
 | Final cost and resource cleanup review | PENDING |
 
+## 4. Known Limitations
 
+- AWS WAF managed rule groups operate in Count mode, not full blocking mode.
 
-\## 4. Known Limitations
+- The attempted custom WAF blocking configuration was not successfully deployed.
 
+- The AWS Organizations SCP was prepared as a reference example but was not deployed.
 
+- Day 18 EBS and RDS resources were temporary and deleted after testing.
 
-\- AWS WAF managed rule groups operate in Count mode, not full blocking mode.
+- CloudWatch alarm configuration was verified, but SNS alarm-delivery testing remains pending.
 
-\- The attempted custom WAF blocking configuration was not successfully deployed.
+- CloudFormation validation does not establish successful deployment or full security compliance.
 
-\- The AWS Organizations SCP was prepared as a reference example but was not deployed.
+- Some infrastructure templates represent alternative implementations and should not be deployed together without reviewing dependencies.
 
-\- Day 18 EBS and RDS resources were temporary and deleted after testing.
+- This project is a learning environment, not a production financial-services system.
 
-\- CloudWatch alarm configuration was verified, but SNS alarm-delivery testing remains pending.
+## 5. Testing Principles
 
-\- CloudFormation validation does not establish successful deployment or full security compliance.
+- Use synthetic application data only.
 
-\- Some infrastructure templates represent alternative implementations and should not be deployed together without reviewing dependencies.
+- Avoid unapproved modifications to production systems.
 
-\- This project is a learning environment, not a production financial-services system.
+- Prefer read-only validation commands.
 
+- Remove temporary billable resources after testing.
 
+- Record evidence without exposing passwords, keys, tokens, or customer information.
 
-\## 5. Testing Principles
-
-
-
-\- Use synthetic application data only.
-
-\- Avoid unapproved modifications to production systems.
-
-\- Prefer read-only validation commands.
-
-\- Remove temporary billable resources after testing.
-
-\- Record evidence without exposing passwords, keys, tokens, or customer information.
-
-
-
-\## 6. Final Acceptance Criteria
-
-
+## 6. Final Acceptance Criteria
 
 The final submission is ready when the application, security monitoring, and logging checks have been completed, important findings are documented, temporary resources are accounted for, and the Git repository has passed its final security review.
 
-
-
-\*\*Final testing status:\*\* In progress.
+**Final testing status:** In progress.
 
 ## Day 21 - Application Integration Testing (2026-11-21)
 - PASS: API Gateway GET /health returned HTTP 200 and healthy status.
