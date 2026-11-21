@@ -146,3 +146,16 @@ The final submission is ready when the application, security monitoring, and log
 - Verified transaction ID: c91949aa-52ba-4b69-a922-a58a918af4d6
 - Lambda duration: 377.98 ms; maximum memory used: 90 MB.
 - NOTE: API Gateway exposes GET /health only; /transaction is not configured.
+
+## Day 22 - Security Monitoring and Detection (2026-11-21)
+- PASS: GuardDuty detector enabled; CloudTrail, DNS and VPC Flow Logs data sources enabled.
+- PASS: Security Hub findings retrieved successfully.
+- PASS: GuardDuty Tor-related finding confirmed as a generated sample (sample=true).
+- PASS: CloudTrail logging enabled with no reported delivery errors.
+- PASS: Three AWS Config rules reported COMPLIANT.
+- PASS: Three CloudWatch alarms reported OK with actions enabled.
+- PASS: SNS email subscription confirmed.
+- PASS: SNS test message delivered and received in Gmail.
+- SNS test MessageId: 44207327-55e0-546d-b5f7-105ce2dbec62
+- NOTE: Direct SNS delivery tested; automatic alarm-to-SNS delivery not tested.
+- NOTE: Additional GuardDuty protection features remain disabled in this low-cost lab.
