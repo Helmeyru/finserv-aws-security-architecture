@@ -15,37 +15,21 @@ This document records the security controls implemented and tested during the pr
 ## 2. Completed Tests
 
 | Security control | Verification | Result |
-
 |---|---|---|
-
 | VPC architecture | Verified public, private application, and isolated database subnets across two AZs | PASS |
-
 | Network segmentation | Reviewed route tables and security-group restrictions | PASS |
-
 | S3 encryption | Uploaded and downloaded SSE-KMS encrypted test object | PASS |
-
 | S3 public access | Verified all four S3 Block Public Access settings | PASS |
-
 | KMS | Verified customer-managed key enabled | PASS |
-
 | DynamoDB connectivity | Lambda successfully performed synthetic PutItem and GetItem operations | PASS |
-
 | CloudFront | Verified distribution deployment and successful HTTP 200 responses | PASS |
-
 | AWS WAF | Inspected Count metrics and sampled requests | PASS — Count mode |
-
 | AWS Config | Verified scoped S3 encryption compliance | PASS |
-
 | SSM remediation | Executed manual remediation successfully | PASS |
-
 | EBS encryption | Verified temporary encrypted EBS volume | PASS |
-
 | RDS security | Verified private, encrypted PostgreSQL database and RDS-managed credentials | PASS |
-
 | RDS secret rotation | Verified rotation configuration and current secret version | PASS |
-
 | CloudWatch alarms | Verified three alarms existed and reported OK | PASS — Configuration |
-
 | SNS | Verified email subscription confirmation | PASS — Subscription |
 
 ## 3. Final Tests — Pending
@@ -53,21 +37,13 @@ This document records the security controls implemented and tested during the pr
 These checks are reserved for Days 21–24.
 
 | Test | Status |
-
 |---|---|
-
 | End-to-end application health and transaction tests | PENDING |
-
 | CloudWatch alarm notification delivery | PENDING |
-
 | GuardDuty and Security Hub final findings verification | PENDING |
-
 | CloudTrail logging verification | PENDING |
-
 | Network and IAM security review | PENDING |
-
 | CloudFormation repository quality and deployment dependency review | PENDING |
-
 | Final cost and resource cleanup review | PENDING |
 
 ## 4. Known Limitations

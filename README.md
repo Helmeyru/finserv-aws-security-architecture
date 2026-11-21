@@ -45,31 +45,18 @@ The application Lambda function performs synthetic DynamoDB transactions. Its he
 ## 3. Security Controls
 
 | Security area | Implementation |
-
 |---|---|
-
 | Network isolation | Public, private application, and isolated database subnets |
-
 | Network access | Security groups and restricted routing |
-
 | Private AWS service access | DynamoDB gateway endpoint |
-
 | Data protection | AWS KMS and S3 encryption |
-
 | Identity and access | Least-privilege IAM roles and scoped policies |
-
 | Threat detection | Amazon GuardDuty |
-
 | Security posture | AWS Security Hub |
-
 | Compliance | AWS Config rules |
-
 | Auditing | AWS CloudTrail |
-
 | Monitoring | CloudWatch Logs, metrics, and alarms |
-
 | Notifications | Amazon SNS |
-
 | Remediation | Systems Manager Automation with manual execution |
 
 ## 4. Security Demonstrations
@@ -143,29 +130,17 @@ Important limitations:
 ```text
 
 finserv-aws-security-architecture/
-
 ├── cloudformation/
-
 │   ├── Day 04/
-
 │   ├── Day 05/
-
 │   ├── ...
-
 │   ├── Day 19/
-
 │   └── Recovered-Templates/
-
 ├── architecture/
-
 ├── docs/
-
 ├── scripts/
-
 ├── tests/
-
 ├── .gitignore
-
 └── README.md
 
 ```
