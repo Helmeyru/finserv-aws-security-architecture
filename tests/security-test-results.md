@@ -8,7 +8,7 @@
 
 **Verification dates:** November 21–22, 2026
 
-**Overall status:** Day 21–23 functional and configuration checks completed; Day 24 GuardDuty → EventBridge → Lambda integration passed. SNS notification automation remains untested.
+**Overall status:** Day 21–23 checks completed; Day 24 GuardDuty → EventBridge → Lambda integration passed. Section 10 verifies CIS v5.0 findings, account-level S3 protection, EBS default encryption and CloudWatch VPC Flow Log ingestion. Automatic SNS notifications, full CIS compliance and captured ACCEPT/REJECT traffic remain unverified.
 
 ## 1. Purpose and Scope
 
@@ -43,7 +43,7 @@ The application uses synthetic data. API Gateway currently exposes `GET /health`
 | SNS direct delivery | Test message published and received in Gmail | PASS — direct delivery |
 | EBS encryption | Temporary encrypted EBS volume verified, then deleted | PASS — demonstration |
 | RDS security | Temporary private, encrypted PostgreSQL instance and managed credentials verified, then deleted | PASS — demonstration |
-| RDS secret configuration | Rotation configuration and refreshed current secret version verified during the demonstration | PASS — configuration/version; not a full scheduled-rotation lifecycle test |
+| RDS secret configuration | RDS-managed master credential rotation configuration and refreshed secret version observed during the demonstration; AWS-managed rotation, not a custom Lambda rotation function | PASS — configuration/version; not a full scheduled-rotation lifecycle test |
 | Resource cleanup | No RDS instances, EBS volumes, or manual RDS snapshots returned in `us-east-1` | PASS — scoped inventory |
 | Cost review | Nov 1–21 account-level unblended cost: approximately **USD 1.65** | PASS — within USD 20 reference budget; billing may lag |
 
@@ -175,7 +175,7 @@ Tests used synthetic data. Security checks were primarily read-only, and tempora
 
 ## 9. Submission Readiness
 
-**Overall assessment:** Day 21–23 controls and Day 24 GuardDuty → EventBridge → Lambda incident-processing integration were verified as described. The public repository contains the project documentation. Submission should acknowledge the remaining limitations above.
+**Overall assessment:** Day 21–23 controls, Day 24 GuardDuty → EventBridge → Lambda incident processing and Section 10 CIS/VPC Flow Logs checks were verified within their documented scopes. The public repository contains the project documentation. Submission should acknowledge the remaining limitations, including pending Security Hub reevaluation, NODATA-only Flow Log records and untested notification automation.
 
 This report deliberately keeps incomplete or untested integration paths visible rather than labeling all checks as passed.
 
@@ -189,7 +189,7 @@ This report deliberately keeps incomplete or untested integration paths visible 
 | S3 Block Public Access | All 8 buckets and account-level settings have all four protections enabled | PASS |
 | CloudFront after S3 change | HTTPS response HTTP 200 OK | PASS |
 | EBS default encryption | Enabled in us-east-1 with alias/aws/ebs | PASS |
-| CIS AWS Foundations v5.0 | 40 controls enabled; PASS/FAIL findings retrieved | OPERATIONAL |
+| CIS AWS Foundations v5.0 | 40 controls enabled; 38% score (15 passed, 11 failed) | OPERATIONAL |
 | FinServ VPC Flow Logs | fl-063e45cabc8c366bb ACTIVE; delivery SUCCESS | PASS |
 | CloudWatch retention | /aws/vpc/finserv-flow-logs set to 7 days | PASS |
 | Log ingestion | Two Lambda ENI streams; five NODATA records retrieved from each | PASS |

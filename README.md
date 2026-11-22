@@ -58,6 +58,15 @@ The application Lambda function performs synthetic DynamoDB transactions. Its he
 | Monitoring | CloudWatch Logs, metrics, and alarms |
 | Notifications | Amazon SNS |
 | Remediation | Systems Manager Automation with manual execution |
+| Secrets management | AWS Secrets Manager; secret storage demonstrated, custom Lambda rotation not verified |
+| Customer-managed encryption | AWS KMS customer-managed key for encrypted S3 data; separate from the AWS-managed EBS default key |
+| S3 public access protection | All eight buckets and account-level Block Public Access settings verified |
+| EBS default encryption | Enabled in us-east-1 using alias/aws/ebs |
+| CloudFront and WAF | Private S3 web origin through CloudFront; managed WAF rules operated in Count mode |
+| Incident processing | Synthetic GuardDuty finding triggered EventBridge and Lambda; ESCALATE verified, SNS automation untested |
+| CIS security assessment | CIS AWS Foundations Benchmark v5.0 enabled; 40 controls enabled; 38% security score (15 passed, 11 failed); full compliance not claimed |
+| Network traffic logging | FinServ VPC Flow Logs delivered NODATA records to CloudWatch; seven-day retention |
+| CloudTrail integrity | Multi-Region management-event auditing, KMS encryption and log-file validation verified |
 
 ## 4. Security Demonstrations
 
@@ -94,12 +103,44 @@ Several templates use configurable CloudFormation parameters to avoid hardcoded 
 These templates are educational Infrastructure as Code examples. They have dependencies and are **not intended to be deployed all at once without reviewing the required parameters, deployment order, resource names, and existing resources**.
 
 
+### CloudFormation Directory Index
+
+| Directory | Main purpose |
+|---|---|
+| Root / Recovered-Templates | Network foundation, security groups and KMS/S3 encryption |
+| Day 04-05 | IAM access controls and Secrets Manager |
+| Day 06-07 | CloudTrail auditing and AWS Config |
+| Day 08-09 | GuardDuty and Security Hub |
+| Day 10-11 | EventBridge/Lambda incident response and SNS alerts |
+| Day 12-15 | Web, application, data, DynamoDB access and API tiers |
+| Day 16 | AWS Config remediation and SSM Automation |
+| Day 17 | CloudFront WAF security controls |
+| Day 18 | Temporary EBS/RDS demonstrations and SCP reference |
+| Day 19 | CloudWatch monitoring and alarms |
+
+All 28 YAML templates passed AWS CloudFormation validate-template on November 22, 2026. This validates template structure, not a full fresh-account deployment.
+
 ### Project Documentation
 
 - [Solution Architecture Diagram](architecture/finserv-aws-security-architecture.png)
 - [CloudFormation Deployment and Verification Guide](docs/deployment-guide.md)
 - [Project 8 Requirements Compliance Matrix](docs/requirements-compliance.md)
 - [Security Testing Results](tests/security-test-results.md)
+
+### Security Verification Evidence
+
+Screenshots captured from the AWS console on November 22, 2026. GuardDuty findings are synthetic; the compliance results represent the observed account state.
+
+| Threat Detection | Incident Response |
+|---|---|
+| <img src="docs/evidence/guardduty-findings-details.png" alt="GuardDuty synthetic Backdoor C&C finding" width="420"> | <img src="docs/evidence/incident-response-logs.png" alt="CloudWatch Lambda incident response ESCALATE event" width="420"> |
+| **GuardDuty:** Synthetic Backdoor C&C finding, HIGH severity | **Lambda:** ESCALATE recorded; automatic SNS notification skipped |
+
+| AWS Config Compliance | Security Hub CIS Assessment |
+|---|---|
+| <img src="docs/evidence/aws-config-compliance-rules.png" alt="Three compliant FinServ AWS Config rules" width="420"> | <img src="docs/evidence/securityhub-cis.png" alt="CIS AWS Foundations Benchmark v5.0 security score" width="420"> |
+| **AWS Config:** Three FinServ rules compliant; manual SSM remediation configured | **Security Hub:** CIS v5.0, 38% score, 15 passed and 11 failed controls |
+
 
 ## 6. Monitoring and Incident Response
 
@@ -118,6 +159,25 @@ Direct SNS email delivery was verified on November 21, 2026. Automatic CloudWatc
 ## 7. Implementation Status and Limitations
 
 This repository documents an implemented AWS security lab rather than a production-ready financial-services platform.
+
+### Implementation Status Summary
+
+| Project objective | Status | Evidence / limitation |
+|---|---|---|
+| Multi-tier VPC and security groups | VERIFIED | Public, private app and isolated DB subnet design |
+| S3 and KMS encryption | VERIFIED | Customer-managed KMS key and SSE-KMS testing |
+| Secrets Manager | PARTIAL | Secret storage demonstrated; custom Lambda rotation not verified |
+| GuardDuty threat detection | VERIFIED | Synthetic Tor and Backdoor C&C findings |
+| EventBridge and Lambda response | VERIFIED | Severity-8 synthetic finding, one invocation, zero errors, ESCALATE |
+| Security Hub CIS v5.0 | PARTIAL | 40 controls enabled; 38% security score (15 passed, 11 failed) on November 22, 2026 |
+| CloudTrail audit integrity | VERIFIED | Multi-Region management events and log-file validation |
+| AWS Config remediation | PARTIAL | Manual SSM remediation verified; automatic remediation disabled |
+| VPC Flow Logs | VERIFIED | ACTIVE, SUCCESS, CloudWatch NODATA ingestion |
+| WAF protection | PARTIAL | Managed rules in Count mode; blocking not demonstrated |
+| IAM permission boundary | NOT DEMONSTRATED | No enforced boundary test established |
+| AWS Organizations SCP | NOT DEPLOYED | Reference template only |
+| RDS Lambda rotation | NOT DEMONSTRATED | AWS-managed RDS credentials demonstrated; custom Lambda rotation not verified |
+| EC2/RDS production tiers | NOT DEPLOYED | Serverless lab; temporary RDS test resource removed |
 
 Important limitations:
 
@@ -155,7 +215,7 @@ finserv-aws-security-architecture/
 │   └── Recovered-Templates/
 ├── architecture/
 ├── docs/
-├── scripts/
+├── iam/
 ├── tests/
 ├── .gitignore
 └── README.md

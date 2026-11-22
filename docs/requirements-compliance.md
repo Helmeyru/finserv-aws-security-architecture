@@ -32,10 +32,10 @@
 | SSM Parameter Store SecureString with customer-managed KMS key | No complete deployed-and-tested example established | Not demonstrated |
 | Secrets Manager centralized secret storage | Secret and RDS-managed credential demonstrations documented | Partial / demonstration |
 | RDS automatic credential rotation via Lambda | Temporary RDS test completed and removed; no scheduled Lambda rotation lifecycle verified | Not demonstrated end-to-end |
-| GuardDuty threat detection | Detector enabled and sample Tor-related finding inspected; sample finding is not a real incident | Verified sample workflow |
-| GuardDuty finding categories (Recon, Backdoor, CryptoCurrency) | A sample finding was examined, not a tested example of every category | Partial |
+| GuardDuty threat detection | Detector enabled; synthetic Tor and Backdoor EC2/C&C findings inspected. Severity-8 Backdoor finding successfully triggered EventBridge and Lambda; not a real incident | Verified sample workflow |
+| GuardDuty finding categories (Recon, Backdoor, CryptoCurrency) | Synthetic Tor and Backdoor C&C findings examined; Recon and CryptoCurrency categories not demonstrated | Partial |
 | Security Hub findings aggregation | Findings reviewed with other AWS security controls | Verified |
-| CIS / PCI DSS compliance frameworks and scoring | CIS AWS Foundations Benchmark v5.0 enabled; 40 controls enabled; PASS/FAIL findings retrieved. Overall compliance score not verified; PCI DSS not enabled. | VERIFIED - CIS assessment operational; full compliance not claimed |
+| CIS / PCI DSS compliance frameworks and scoring | CIS AWS Foundations Benchmark v5.0 enabled; 40 controls enabled; PASS/FAIL findings retrieved. CIS score: 38% (15 passed, 11 failed) on November 22, 2026; PCI DSS not enabled. | VERIFIED - CIS assessment operational; full compliance not claimed |
 | AWS Config compliance rules | Three compliance rules returned COMPLIANT | Verified |
 | AWS Config automatic remediation with SSM | SSM runbook manually executed successfully; automatic remediation disabled | Verified manual remediation; automatic mode not demonstrated |
 | CloudTrail multi-Region API auditing | Multi-Region logging, KMS encryption, management read/write events, and log-file validation verified live. S3 object-level data events not enabled. | VERIFIED - management-event auditing |
@@ -61,7 +61,7 @@
 
 - VERIFIED: CloudTrail log-file validation and multi-Region trail logging were confirmed using AWS CLI. S3 object-level data events remain outside the verified configuration.
 - VERIFIED: Synthetic GuardDuty finding triggered EventBridge and Lambda (ESCALATE; 1 invocation; 0 errors). PENDING: Automatic SNS delivery from Lambda and CloudWatch alarm notifications.
-- Confirm whether Security Hub security standards are enabled; record specific control results and associated charges before enabling any new ones.
+- VERIFIED: CIS AWS Foundations Benchmark v5.0 is enabled with 40 controls and PASS/FAIL findings. FOLLOW-UP: Capture the compliance score when available and confirm reevaluation of S3.1, EC2.7, and FinServ EC2.6; review costs before enabling additional standards.
 - Demonstrate automatic Config remediation only against a disposable, non-production test resource after reviewing permissions and side effects.
 - Add a separately scoped Secrets Manager scheduled-rotation proof of concept only if time and cost permit.
 

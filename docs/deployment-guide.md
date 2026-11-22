@@ -6,7 +6,7 @@
 
 **Scope:** Educational deployment reference and review guide. This is **not** a verified, one-command, clean-account redeployment procedure.
 
-**Last documentation review:** November 21, 2026
+**Last documentation review:** November 22, 2026
 
 ## 1. Important scope and safety notes
 
@@ -70,7 +70,7 @@ The following order is inferred from the templates' roles and known dependencies
 | Day 07 | `cloudformation/Day 07/finserv-aws-config.yaml` | AWS Config storage bucket/policy; not a complete recorder in this file |
 | Day 07 | `cloudformation/Day 07/finserv-config-rules.yaml` | Compliance rules; needs configured AWS Config service |
 | Day 08 | `cloudformation/Day 08/finserv-guardduty.yaml` | GuardDuty configuration |
-| Day 09 | `cloudformation/Day 09/finserv-securityhub.yaml` | Security Hub aggregation; standards status requires separate verification |
+| Day 09 | `cloudformation/Day 09/finserv-securityhub.yaml` | Security Hub aggregation template; CIS AWS Foundations Benchmark v5.0 subsequently enabled and evaluated live (40 controls; PASS/FAIL findings); not enabled by this template |
 | Day 10 | `cloudformation/Day 10/finserv-incident-response.yaml` | Initial incident-response design |
 | Day 11 | `cloudformation/Day 11/finserv-incident-response-day11.yaml` | Incident-response variant; review before reuse |
 | Day 11 | `cloudformation/Day 11/finserv-sns-alerts.yaml` | SNS notification topic |
@@ -133,6 +133,8 @@ For any future rebuild, first plan each stack's parameters and create a CloudFor
 
 ## 7. Verification and evidence
 
+**November 22 verification update:** Day 24 synthetic severity-8 GuardDuty finding triggered EventBridge and Lambda successfully (1 invocation, 0 errors, ESCALATE); automatic SNS notification remains untested. CIS AWS Foundations Benchmark v5.0 was enabled with 40 controls and actual PASS/FAIL findings. CloudTrail log-file validation was verified live. Account-level S3 Block Public Access and EBS default encryption were enabled and verified. FinServ VPC Flow Logs are ACTIVE with delivery SUCCESS; two CloudWatch ENI streams contain ingested NODATA records. Actual ACCEPT/REJECT traffic capture and Security Hub post-remediation PASSED results are not established.
+
 Existing Day 21–23 evidence is recorded in [Security Test Results](../tests/security-test-results.md). It reports:
 
 - API Gateway `GET /health` HTTP 200, while `/transaction` was not configured as an API route.
@@ -175,7 +177,7 @@ Before deleting **any** stack, inventory its resources with `describe-stack-reso
 - The SSM/AWS Config remediation control was intentionally manual, not automatic.
 - SCP deployment and IAM permission boundaries are not established as enforced controls by the recorded evidence.
 - Secrets Manager exercises are not evidence of automatic RDS credential rotation through a Lambda rotation function.
-- Security Hub aggregation is demonstrated, but formal CIS/PCI standards coverage and scores were not established by the verification report.
+- CIS AWS Foundations Benchmark v5.0 was enabled with 40 controls and PASS/FAIL findings retrieved. The CIS score was 38% (15 passed, 11 failed) on November 22, 2026; PCI DSS was not enabled. Full compliance is not claimed.
 - A secondary CloudTrail in `us-east-2` had a delivery error during auditing. Investigate its ownership and purpose before making changes.
 - The repository has not been validated as a fully automated, end-to-end fresh-account deployment.
 
