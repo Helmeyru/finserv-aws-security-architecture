@@ -76,7 +76,7 @@ Resources:
               finding_type = detail.get("type", "UNKNOWN")
               finding_id = detail.get("id", "UNKNOWN")
 
-              # Robust check for AWS sample findings
+              # Best-effort sample detection only; generated test findings may not be identified as samples. Keep ENABLE_NOTIFICATIONS=false until controlled end-to-end validation.
               is_sample = (
                   detail.get("sample") is True
                   or str(detail.get("title", "")).upper().startswith("[SAMPLE]")

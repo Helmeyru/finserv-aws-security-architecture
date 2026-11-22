@@ -126,6 +126,8 @@ All 28 YAML templates passed AWS CloudFormation validate-template on November 22
 - [CloudFormation Deployment and Verification Guide](docs/deployment-guide.md)
 - [Project 8 Requirements Compliance Matrix](docs/requirements-compliance.md)
 - [Security Testing Results](tests/security-test-results.md)
+- [CIS v5.0 Security Findings and Remediation Plan](docs/cis-remediation-plan.md)
+
 
 ### Security Verification Evidence
 

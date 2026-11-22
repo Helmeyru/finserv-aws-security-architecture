@@ -61,7 +61,7 @@
 
 - VERIFIED: CloudTrail log-file validation and multi-Region trail logging were confirmed using AWS CLI. S3 object-level data events remain outside the verified configuration.
 - VERIFIED: Synthetic GuardDuty finding triggered EventBridge and Lambda (ESCALATE; 1 invocation; 0 errors). PENDING: Automatic SNS delivery from Lambda and CloudWatch alarm notifications.
-- VERIFIED: CIS AWS Foundations Benchmark v5.0 is enabled with 40 controls and PASS/FAIL findings. FOLLOW-UP: Capture the compliance score when available and confirm reevaluation of S3.1, EC2.7, and FinServ EC2.6; review costs before enabling additional standards.
+- VERIFIED: CIS AWS Foundations Benchmark v5.0 was enabled and evaluated on November 22, 2026, with a 38% score (15 passed, 11 failed, out of 40 enabled controls). FOLLOW-UP: Review remaining failed controls and confirm post-remediation evaluations of S3.1, EC2.7, and FinServ EC2.6. The other 14 enabled controls were not shown as passed or failed in the recorded summary.
 - Demonstrate automatic Config remediation only against a disposable, non-production test resource after reviewing permissions and side effects.
 - Add a separately scoped Secrets Manager scheduled-rotation proof of concept only if time and cost permit.
 
@@ -71,5 +71,7 @@
 - [Security testing and verification report](../tests/security-test-results.md)
 - [Architecture overview](../architecture/architecture.md)
 - [CloudFormation templates](../cloudformation/)
+- [CIS v5.0 Remediation Plan](cis-remediation-plan.md)
+
 
 **Assessment:** Core project architecture, encryption, detection, audit, and testing are substantially demonstrated. Advanced automation, governance, rotation, and framework-scoring outcomes remain partial or unverified. A final passing decision belongs to Manara reviewers.

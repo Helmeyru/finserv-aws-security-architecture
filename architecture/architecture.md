@@ -72,7 +72,8 @@ flowchart TB
     VPC -. "VPC-wide network metadata" .-> FLOW
     L -. "Application logs and metrics" .-> LOGS
     IAM -. "Execution permissions" .-> L
-    KMS -. "SSE-KMS" .-> S3
+    DATA_S3["Private FinServ data bucket<br/>SSE-KMS with customer-managed key"]
+    KMS -. "SSE-KMS encryption" .-> DATA_S3
 
     classDef limited fill:#fff0d6,stroke:#b7791f,color:#543b16
     classDef verified fill:#e9f7ef,stroke:#39875e,color:#153f2b
