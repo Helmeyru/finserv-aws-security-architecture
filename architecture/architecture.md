@@ -3,7 +3,7 @@
 The diagram distinguishes deployed components, tested integrations, and features whose end-to-end operation remains unverified. It is a logical view; placement does not imply every component is inside the VPC.
 
 ```mermaid
-flowchart LR
+flowchart TB
     U["Users / API clients"]
 
     subgraph Edge["Public access and static website"]
