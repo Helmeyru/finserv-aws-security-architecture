@@ -1,0 +1,14 @@
+{
+    "Version":  "2012-10-17",
+    "Statement":  [
+                      {
+                          "Effect":  "Allow",
+                          "Resource":  "arn:aws:logs:us-east-1:340805528222:log-group:/aws/vpc/finserv-flow-logs:*",
+                          "Action":  [
+                                         "logs:CreateLogStream",
+                                         "logs:PutLogEvents",
+                                         "logs:DescribeLogStreams"
+                                     ]
+                      }
+                  ]
+}

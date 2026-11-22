@@ -35,10 +35,10 @@
 | GuardDuty threat detection | Detector enabled and sample Tor-related finding inspected; sample finding is not a real incident | Verified sample workflow |
 | GuardDuty finding categories (Recon, Backdoor, CryptoCurrency) | A sample finding was examined, not a tested example of every category | Partial |
 | Security Hub findings aggregation | Findings reviewed with other AWS security controls | Verified |
-| CIS / PCI DSS compliance frameworks and scoring | No verified scores; template was configured without default standards | Not demonstrated |
+| CIS / PCI DSS compliance frameworks and scoring | CIS AWS Foundations Benchmark v5.0 enabled; 40 controls enabled; PASS/FAIL findings retrieved. Overall compliance score not verified; PCI DSS not enabled. | VERIFIED - CIS assessment operational; full compliance not claimed |
 | AWS Config compliance rules | Three compliance rules returned COMPLIANT | Verified |
 | AWS Config automatic remediation with SSM | SSM runbook manually executed successfully; automatic remediation disabled | Verified manual remediation; automatic mode not demonstrated |
-| CloudTrail multi-Region API auditing | Principal multi-Region trail logging confirmed; log-file validation is specified in template but live setting needs confirmation | Verified logging; validation setting unconfirmed live |
+| CloudTrail multi-Region API auditing | Multi-Region logging, KMS encryption, management read/write events, and log-file validation verified live. S3 object-level data events not enabled. | VERIFIED - management-event auditing |
 | WAF + Shield Standard protection | CloudFront and WAF managed rules deployed in Count mode; no verified active WAF block rule | Partial; monitoring rather than active WAF blocking |
 | IAM least privilege | Scoped Lambda permissions for DynamoDB and restricted security groups reviewed | Verified for reviewed policies; not a complete IAM audit |
 | IAM permission boundaries | No successfully applied boundary established | Not demonstrated |
@@ -59,8 +59,8 @@
 
 ## Recommended next validation work (optional, not completed claims)
 
-- Check the actual CloudTrail `LogFileValidationEnabled` setting and verify trail status.
-- Verify the EventBridge rule, Lambda invocation logs, and SNS delivery with a controlled test event.
+- VERIFIED: CloudTrail log-file validation and multi-Region trail logging were confirmed using AWS CLI. S3 object-level data events remain outside the verified configuration.
+- VERIFIED: Synthetic GuardDuty finding triggered EventBridge and Lambda (ESCALATE; 1 invocation; 0 errors). PENDING: Automatic SNS delivery from Lambda and CloudWatch alarm notifications.
 - Confirm whether Security Hub security standards are enabled; record specific control results and associated charges before enabling any new ones.
 - Demonstrate automatic Config remediation only against a disposable, non-production test resource after reviewing permissions and side effects.
 - Add a separately scoped Secrets Manager scheduled-rotation proof of concept only if time and cost permit.

@@ -113,7 +113,7 @@ The monitoring implementation includes three CloudWatch alarms:
 
 CloudWatch Logs retention was configured for seven days for the monitored Lambda functions.
 
-Direct SNS email delivery was verified on November 21, 2026. Automatic CloudWatch alarm notifications and end-to-end EventBridge incident response remain untested.
+Direct SNS email delivery was verified on November 21, 2026. Automatic CloudWatch alarm notifications and SNS delivery from the incident-response Lambda remain untested. On November 22, a synthetic high-severity GuardDuty finding successfully triggered EventBridge and Lambda (1 invocation, 0 errors; ESCALATE recorded).
 
 ## 7. Implementation Status and Limitations
 

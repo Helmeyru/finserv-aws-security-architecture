@@ -178,3 +178,25 @@ Tests used synthetic data. Security checks were primarily read-only, and tempora
 **Overall assessment:** Day 21–23 controls and Day 24 GuardDuty → EventBridge → Lambda incident-processing integration were verified as described. The public repository contains the project documentation. Submission should acknowledge the remaining limitations above.
 
 This report deliberately keeps incomplete or untested integration paths visible rather than labeling all checks as passed.
+
+## 10. Final CIS and VPC Flow Logs Verification
+
+**Date:** November 22, 2026
+**Region:** us-east-1
+
+| Test | Evidence | Result |
+|---|---|---|
+| S3 Block Public Access | All 8 buckets and account-level settings have all four protections enabled | PASS |
+| CloudFront after S3 change | HTTPS response HTTP 200 OK | PASS |
+| EBS default encryption | Enabled in us-east-1 with alias/aws/ebs | PASS |
+| CIS AWS Foundations v5.0 | 40 controls enabled; PASS/FAIL findings retrieved | OPERATIONAL |
+| FinServ VPC Flow Logs | fl-063e45cabc8c366bb ACTIVE; delivery SUCCESS | PASS |
+| CloudWatch retention | /aws/vpc/finserv-flow-logs set to 7 days | PASS |
+| Log ingestion | Two Lambda ENI streams; five NODATA records retrieved from each | PASS |
+| Network traffic capture | No ACCEPT/REJECT records demonstrated | NOT VERIFIED |
+| Security Hub reevaluation | S3.1, EC2.7 and FinServ EC2.6 retain pre-remediation FAILED timestamps | PENDING |
+| Default VPC Flow Logs | Not configured | OPEN |
+
+**Verified ENIs:** eni-09ead21e43fe21d0a (10.20.11.46) and eni-0fa20d4944a6137af (10.20.12.48).
+
+**Limitations:** NODATA records confirm CloudWatch ingestion but not captured traffic. Account-level IAM, root hardware MFA, security contacts, S3 object-level auditing, and default VPC Flow Logs remain outside verified remediation scope. Overall CIS compliance is not claimed.
