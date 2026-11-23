@@ -39,6 +39,7 @@ A hands-on AWS security project demonstrating defense-in-depth, private networki
 - [CIS Security Findings and Remediation Plan](docs/cis-remediation-plan.md)
 
 
+
 ## 1. Project Overview
 
 This project demonstrates how to design and secure a financial-services-style application on AWS.
