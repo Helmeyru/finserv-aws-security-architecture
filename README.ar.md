@@ -328,6 +328,7 @@
 - [نتائج الاختبارات والتحقق الأمني](tests/security-test-results.md)
 - [تقرير نتائج الاختبارات الأمنية — النسخة العربية](tests/security-test-results.ar.md)
 - [نتائج معيار CIS v5.0 وخطة المعالجة التصحيحية](docs/cis-remediation-plan.md)
+- [نتائج معيار CIS وخطة المعالجة — النسخة العربية](docs/cis-remediation-plan.ar.md)
 - [اختبار محاكاة حدود الصلاحيات في IAM](docs/iam-permissions-boundary-test.md)
 - [الضوابط الأمنية المتقدمة وخطة استكمال اختبارات التحقق](docs/advanced-security-controls.md)
 - [الضوابط الأمنية المتقدمة — النسخة العربية](docs/advanced-security-controls.ar.md)
