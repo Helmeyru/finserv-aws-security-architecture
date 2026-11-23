@@ -71,7 +71,7 @@
 
 أُنشئ معظم مكونات البنية التحتية باستخدام **AWS CloudFormation**، وأُجريت اختبارات التحقق باستخدام **AWS CLI** و**PowerShell**.
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>العنصر</strong></th>
@@ -127,7 +127,7 @@
 
 يعتمد المشروع تصميمًا منطقيًا من **ثلاث طبقات** باستخدام خدمات مُدارة وبنية دون خوادم دائمة:
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>الطبقة</strong></th>
@@ -176,7 +176,7 @@
 
 يوضح الجدول الآتي الضوابط المطبّقة أو التي جرى اختبارها ضمن حدود المشروع. ولا يعني وجود خدمة في الجدول أن جميع إمكاناتها قد فُعّلت أو اختُبرت.
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>المجال الأمني</strong></th>
@@ -309,7 +309,7 @@
 
 ### دليل مجلدات CloudFormation
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>المجلد</strong></th>
@@ -397,7 +397,7 @@
 
 التُقطت صور الأدلة من وحدة تحكم AWS بتاريخ **22 نوفمبر 2026**. نتائج GuardDuty المعروضة اصطناعية لأغراض الاختبار، وتعكس نتائج الامتثال حالة الحساب التي لوحظت عند الفحص.
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>اكتشاف التهديدات</strong></th>
@@ -416,7 +416,7 @@
 </tbody>
 </table>
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>الامتثال في AWS Config</strong></th>
@@ -466,7 +466,7 @@
 
 ### ملخص حالة التنفيذ
 
-<table dir="rtl">
+<table dir="rtl" width="100%">
 <thead>
 <tr>
 <th align="right" dir="rtl"><strong>هدف المشروع</strong></th>
