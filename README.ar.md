@@ -322,6 +322,7 @@
 
 - [المخطط المعماري للحل](architecture/finserv-aws-security-architecture.png)
 - [دليل نشر CloudFormation والتحقق من التنفيذ](docs/deployment-guide.md)
+- [دليل نشر CloudFormation والتحقق من التنفيذ — النسخة العربية](docs/deployment-guide.ar.md)
 - [مصفوفة تحقيق متطلبات مشروع منارة الثامن](docs/requirements-compliance.md)
 - [مصفوفة تحقيق متطلبات مشروع منارة الثامن — النسخة العربية](docs/requirements-compliance.ar.md)
 - [نتائج الاختبارات والتحقق الأمني](tests/security-test-results.md)
