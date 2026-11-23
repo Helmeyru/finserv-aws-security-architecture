@@ -241,22 +241,38 @@ The matrix identifies verified implementations, partial demonstrations, and secu
 
 ## 9. Repository Structure
 
-```text
+The repository is organized into Infrastructure as Code templates, architecture diagrams, security documentation, IAM policy examples, and testing evidence.
 
+```text
 finserv-aws-security-architecture/
+├── architecture/
+│   ├── architecture.md
+│   ├── finserv-aws-security-architecture.drawio
+│   └── finserv-aws-security-architecture.png
 ├── cloudformation/
 │   ├── Day 04/
 │   ├── Day 05/
-│   ├── ...
+│   ├── ... (additional day folders)
 │   ├── Day 19/
 │   └── Recovered-Templates/
-├── architecture/
 ├── docs/
+│   ├── evidence/
+│   │   ├── aws-config-compliance-rules.png
+│   │   ├── guardduty-findings-details.png
+│   │   ├── incident-response-logs.png
+│   │   └── securityhub-cis.png
+│   ├── cis-remediation-plan.md
+│   ├── deployment-guide.md
+│   └── requirements-compliance.md
 ├── iam/
+│   ├── flowlogs/
+│   │   ├── finserv-flowlogs-permissions.json
+│   │   └── finserv-flowlogs-trust.json
+│   └── README.md
 ├── tests/
+│   └── security-test-results.md
 ├── .gitignore
 └── README.md
-
 ```
 
 ## 10. Tools and Technologies
