@@ -119,7 +119,7 @@ The application uses synthetic data. API Gateway currently exposes `GET /health`
 
 ## 6. Day 24 — GuardDuty Incident Response Integration Test
 
-**Test date:** November 22, 2026
+**Test date:** November 22, 2026, approximately 02:47 Yemen time (UTC+03:00), corresponding to November 21, 2026, at 23:47 UTC in CloudWatch Logs.
 
 **Region:** us-east-1
 

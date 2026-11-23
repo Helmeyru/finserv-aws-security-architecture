@@ -10,7 +10,7 @@ flowchart TB
         direction TB
         WAF["AWS WAF<br/>Managed rules: COUNT"]
         CF["Amazon CloudFront"]
-        S3["Private S3 website bucket"]
+        S3["Private S3 website bucket<br/>SSE-S3 (AES256)"]
         API["Amazon API Gateway<br/>GET /health verified"]
         WAF -. "Web ACL attached" .-> CF
         CF -->|"Origin Access Control"| S3
@@ -64,7 +64,7 @@ flowchart TB
 
     U --> CF
     U --> API
-    API -.->|"Application integration not fully verified"| L
+    API -->|"GET /health verified; transaction route not implemented"| L
     EP --> DDB
     GD -->|"Synthetic severity-8 finding"| EB
     IR -->|"ESCALATE log event"| LOGS
