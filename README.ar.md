@@ -329,6 +329,7 @@
 - [نتائج معيار CIS v5.0 وخطة المعالجة التصحيحية](docs/cis-remediation-plan.md)
 - [اختبار محاكاة حدود الصلاحيات في IAM](docs/iam-permissions-boundary-test.md)
 - [الضوابط الأمنية المتقدمة وخطة استكمال اختبارات التحقق](docs/advanced-security-controls.md)
+- [الضوابط الأمنية المتقدمة — النسخة العربية](docs/advanced-security-controls.ar.md)
 
 ### أدلة التحقق الأمني
 
