@@ -326,6 +326,7 @@
 - [مصفوفة تحقيق متطلبات مشروع منارة الثامن](docs/requirements-compliance.md)
 - [مصفوفة تحقيق متطلبات مشروع منارة الثامن — النسخة العربية](docs/requirements-compliance.ar.md)
 - [نتائج الاختبارات والتحقق الأمني](tests/security-test-results.md)
+- [تقرير نتائج الاختبارات الأمنية — النسخة العربية](tests/security-test-results.ar.md)
 - [نتائج معيار CIS v5.0 وخطة المعالجة التصحيحية](docs/cis-remediation-plan.md)
 - [اختبار محاكاة حدود الصلاحيات في IAM](docs/iam-permissions-boundary-test.md)
 - [الضوابط الأمنية المتقدمة وخطة استكمال اختبارات التحقق](docs/advanced-security-controls.md)
