@@ -323,6 +323,7 @@
 - [المخطط المعماري للحل](architecture/finserv-aws-security-architecture.png)
 - [دليل نشر CloudFormation والتحقق من التنفيذ](docs/deployment-guide.md)
 - [مصفوفة تحقيق متطلبات مشروع منارة الثامن](docs/requirements-compliance.md)
+- [مصفوفة تحقيق متطلبات مشروع منارة الثامن — النسخة العربية](docs/requirements-compliance.ar.md)
 - [نتائج الاختبارات والتحقق الأمني](tests/security-test-results.md)
 - [نتائج معيار CIS v5.0 وخطة المعالجة التصحيحية](docs/cis-remediation-plan.md)
 - [اختبار محاكاة حدود الصلاحيات في IAM](docs/iam-permissions-boundary-test.md)
