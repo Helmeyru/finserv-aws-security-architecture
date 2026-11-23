@@ -31,6 +31,7 @@ The application uses synthetic data. API Gateway currently exposes `GET /health`
 | Lambda and DynamoDB | Direct Lambda invocation successfully performed synthetic `PutItem` and `GetItem` | PASS |
 | CloudWatch Logs | Confirmed health-check and transaction execution logs | PASS |
 | CloudFront | Distribution deployment and HTTP 200 requests verified earlier | PASS |
+| CloudFront website encryption | The returned website object reported `x-amz-server-side-encryption: AES256`, confirming SSE-S3 for that object. This header alone does not verify the bucket's default encryption configuration. | PASS — returned object |
 | AWS WAF | Managed rules in **Count** mode; metrics and sampled requests inspected | PASS — observational mode only |
 | AWS Config | Three project rules returned `COMPLIANT` | PASS — reported rule status |
 | SSM remediation | Scoped, manual S3 encryption remediation completed earlier | PASS — manual execution |
@@ -115,7 +116,7 @@ The application uses synthetic data. API Gateway currently exposes `GET /health`
 
 - **Main CloudTrail:** `finserv-security-trail` logging successfully.
 
-- **Follow-up:** An additional `security-trail` with home Region `us-east-2` returned `IsLogging: false` and `LatestDeliveryError: NoSuchBucket`. Its ownership and configuration need separate review; it was **not** deleted.
+- **Legacy CloudTrail finding:** The `security-trail` in `us-east-2` belongs to a previous AWS lab and is unrelated to FinServ. Logging is disabled, and its former S3 destination no longer exists (HTTP 404). The trail was left unchanged.
 
 ## 6. Day 24 — GuardDuty Incident Response Integration Test
 
@@ -164,7 +165,7 @@ The application uses synthetic data. API Gateway currently exposes `GET /health`
 | AWS WAF blocking | NOT IMPLEMENTED | Managed rule groups were in Count mode; the attempted custom blocking rule did not deploy. |
 | AWS Organizations SCP | NOT DEPLOYED | Reference template was validated only. |
 | Day 18 EBS and RDS resources | REMOVED | Temporary security demonstrations were deleted after verification. |
-| Additional CloudTrail in `us-east-2` | REVIEW REQUIRED | Trail not logging; recorded `NoSuchBucket` error. |
+| Legacy CloudTrail in `us-east-2` | OUTSIDE PROJECT SCOPE | Trail belongs to an earlier AWS lab. Logging is disabled, its S3 destination is missing, and the trail was left unchanged. |
 | Public GitHub documentation | AVAILABLE; FINAL CONTENT REVIEW ADVISED | Public GitHub access confirmed and architecture files published; continue to review formatting, accuracy, and sensitive content. |
 
 ## 8. Evidence and Testing Principles

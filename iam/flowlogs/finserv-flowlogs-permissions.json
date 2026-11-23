@@ -3,7 +3,7 @@
     "Statement":  [
                       {
                           "Effect":  "Allow",
-                          "Resource":  "arn:aws:logs:us-east-1:340805528222:log-group:/aws/vpc/finserv-flow-logs:*",
+                          "Resource":  "arn:aws:logs:us-east-1:123456789012:log-group:/aws/vpc/finserv-flow-logs:*",
                           "Action":  [
                                          "logs:CreateLogStream",
                                          "logs:PutLogEvents",

@@ -102,6 +102,7 @@ Several templates use configurable CloudFormation parameters to avoid hardcoded 
 
 These templates are educational Infrastructure as Code examples. They have dependencies and are **not intended to be deployed all at once without reviewing the required parameters, deployment order, resource names, and existing resources**.
 
+**IAM documentation:** The `iam/flowlogs/` directory contains example IAM trust and permissions policies for publishing VPC Flow Logs to CloudWatch Logs. The account ID in these examples is a placeholder.
 
 ### CloudFormation Directory Index
 
@@ -143,6 +144,8 @@ Screenshots captured from the AWS console on November 22, 2026. GuardDuty findin
 | <img src="docs/evidence/aws-config-compliance-rules.png" alt="Three compliant FinServ AWS Config rules" width="420"> | <img src="docs/evidence/securityhub-cis.png" alt="CIS AWS Foundations Benchmark v5.0 security score" width="420"> |
 | **AWS Config:** Three FinServ rules compliant; manual SSM remediation configured | **Security Hub:** CIS v5.0, 38% score, 15 passed and 11 failed controls |
 
+
+**GuardDuty testing note:** GuardDuty sample generation can create many synthetic findings. The 479 findings displayed in the evidence screenshot should not be interpreted as 479 real attacks or security incidents.
 
 ## 6. Monitoring and Incident Response
 

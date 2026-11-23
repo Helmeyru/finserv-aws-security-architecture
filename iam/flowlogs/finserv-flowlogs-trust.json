@@ -8,7 +8,7 @@
                                         },
                           "Condition":  {
                                             "StringEquals":  {
-                                                                 "aws:SourceAccount":  "340805528222"
+                                                                 "aws:SourceAccount":  "123456789012"
                                                              }
                                         },
                           "Action":  "sts:AssumeRole"
