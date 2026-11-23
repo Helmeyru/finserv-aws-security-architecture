@@ -33,6 +33,7 @@ A hands-on AWS security project demonstrating defense-in-depth, private networki
 - [Security Testing Results](tests/security-test-results.md)
 - [Requirements Compliance Matrix](docs/requirements-compliance.md)
 - [CIS Security Findings and Remediation Plan](docs/cis-remediation-plan.md)
+- [Advanced Security Controls and Remaining Validation](docs/advanced-security-controls.md)
 
 ---
 
@@ -73,6 +74,28 @@ The architecture includes:
 - **Remediation:** AWS Systems Manager Automation and controlled incident-response components
 
 The application Lambda function performs synthetic DynamoDB transactions. Its health-check endpoint supports application availability verification.
+
+### Three-Tier Application Design
+
+FinServ uses a serverless three-tier architecture:
+
+| Tier | AWS Services | Purpose |
+|---|---|---|
+| Web | CloudFront, AWS WAF, private S3 website bucket | Deliver the website and inspect incoming requests |
+| Application | API Gateway and AWS Lambda | Provide the health-check API and application logic |
+| Data | Amazon DynamoDB and a DynamoDB gateway VPC endpoint | Store synthetic transactions and provide private AWS service access |
+
+**Verified application functionality:** API Gateway `GET /health` returned HTTP 200. Direct Lambda invocation successfully performed DynamoDB `PutItem` and `GetItem` operations.
+
+**Important limitation:** The API Gateway transaction endpoint was not implemented. The application uses DynamoDB rather than a persistent RDS database. Isolated database subnets were created, and a temporary encrypted RDS instance was demonstrated and later deleted.
+
+### AWS Architecture Diagram
+
+![FinServ AWS Secure Multi-Tier Architecture](architecture/finserv-aws-security-architecture.png)
+
+**Architecture source files:**
+- [Editable AWS diagram (draw.io)](architecture/finserv-aws-security-architecture.drawio)
+- [Mermaid architecture diagram](architecture/architecture.md)
 
 ## 3. Security Controls
 
@@ -306,12 +329,4 @@ The goal of this project is to demonstrate practical AWS solutions architecture 
 **Portfolio focus:** AWS Cloud Security Engineering
 
 
-
-### AWS Architecture Diagram
-
-![FinServ AWS Secure Multi-Tier Architecture](architecture/finserv-aws-security-architecture.png)
-
-**Architecture files:**
-- [Editable AWS diagram (draw.io)](architecture/finserv-aws-security-architecture.drawio)
-- [Mermaid architecture diagram](architecture/architecture.md)
 
