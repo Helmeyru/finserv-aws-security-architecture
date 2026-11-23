@@ -127,6 +127,7 @@
 **الملفات الأصلية للمخطط:**
 - [المخطط القابل للتعديل باستخدام draw.io](architecture/finserv-aws-security-architecture.drawio)
 - [المخطط بصيغة Mermaid](architecture/architecture.md)
+- [المخطط المعماري بصيغة Mermaid — النسخة العربية](architecture/architecture.ar.md)
 
 ## 3. الضوابط الأمنية
 
