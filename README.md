@@ -6,28 +6,25 @@ A hands-on AWS security project demonstrating defense-in-depth, private networki
 
 ## Table of Contents
 
-- [FinServ — Secure AWS Multi-Tier Architecture](#finserv--secure-aws-multi-tier-architecture)
-  - [Table of Contents](#table-of-contents)
-  - [1. Project Overview](#1-project-overview)
-  - [2. Architecture](#2-architecture)
-  - [3. Security Controls](#3-security-controls)
-  - [4. Security Demonstrations](#4-security-demonstrations)
-    - [Encryption](#encryption)
-    - [Private Networking](#private-networking)
-    - [Security Monitoring](#security-monitoring)
-    - [Compliance and Remediation](#compliance-and-remediation)
-  - [5. Infrastructure as Code](#5-infrastructure-as-code)
-    - [CloudFormation Directory Index](#cloudformation-directory-index)
-    - [Project Documentation](#project-documentation)
-    - [Security Verification Evidence](#security-verification-evidence)
-  - [6. Monitoring and Incident Response](#6-monitoring-and-incident-response)
-  - [7. Implementation Status and Limitations](#7-implementation-status-and-limitations)
-    - [Implementation Status Summary](#implementation-status-summary)
-  - [8. Compliance with Project 8 Objectives](#8-compliance-with-project-8-objectives)
-  - [9. Repository Structure](#9-repository-structure)
-  - [10. Tools and Technologies](#10-tools-and-technologies)
-  - [11. Project Objective](#11-project-objective)
-    - [AWS Architecture Diagram](#aws-architecture-diagram)
+1. [Project Overview](#1-project-overview)
+2. [Architecture](#2-architecture)
+3. [Security Controls](#3-security-controls)
+4. [Security Demonstrations](#4-security-demonstrations)
+   - [Encryption](#encryption)
+   - [Private Networking](#private-networking)
+   - [Security Monitoring](#security-monitoring)
+   - [Compliance and Remediation](#compliance-and-remediation)
+5. [Infrastructure as Code](#5-infrastructure-as-code)
+   - [CloudFormation Directory Index](#cloudformation-directory-index)
+   - [Project Documentation](#project-documentation)
+   - [Security Verification Evidence](#security-verification-evidence)
+6. [Monitoring and Incident Response](#6-monitoring-and-incident-response)
+7. [Implementation Status and Limitations](#7-implementation-status-and-limitations)
+   - [Implementation Status Summary](#implementation-status-summary)
+8. [Compliance with Project 8 Objectives](#8-compliance-with-project-8-objectives)
+9. [Repository Structure](#9-repository-structure)
+10. [Tools and Technologies](#10-tools-and-technologies)
+11. [Project Objective](#11-project-objective)
 
 **Additional Resources**
 
@@ -37,7 +34,7 @@ A hands-on AWS security project demonstrating defense-in-depth, private networki
 - [Requirements Compliance Matrix](docs/requirements-compliance.md)
 - [CIS Security Findings and Remediation Plan](docs/cis-remediation-plan.md)
 
-
+---
 
 ## 1. Project Overview
 
