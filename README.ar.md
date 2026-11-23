@@ -8,26 +8,54 @@
 
 ## فهرس المحتويات
 
-1. [نظرة عامة على المشروع](#1-نظرة-عامة-على-المشروع)
-2. [التصميم المعماري](#2-التصميم-المعماري)
-   - [تصميم التطبيق ثلاثي الطبقات](#تصميم-التطبيق-ثلاثي-الطبقات)
-   - [المخطط المعماري للمشروع](#المخطط-المعماري-للمشروع)
-3. [الضوابط الأمنية](#3-الضوابط-الأمنية)
-4. [التجارب العملية للضوابط الأمنية](#4-التجارب-العملية-للضوابط-الأمنية)
-   - [التشفير](#التشفير)
-   - [الشبكات الخاصة](#الشبكات-الخاصة)
-   - [المراقبة الأمنية](#المراقبة-الأمنية)
-   - [الامتثال والمعالجة التصحيحية](#الامتثال-والمعالجة-التصحيحية)
-5. [البنية التحتية بوصفها شيفرة](#5-البنية-التحتية-بوصفها-شيفرة)
-   - [دليل مجلدات CloudFormation](#دليل-مجلدات-cloudformation)
-   - [وثائق المشروع](#وثائق-المشروع)
-   - [أدلة التحقق الأمني](#أدلة-التحقق-الأمني)
-6. [المراقبة والاستجابة للحوادث](#6-المراقبة-والاستجابة-للحوادث)
-7. [حالة التنفيذ والقيود](#7-حالة-التنفيذ-والقيود)
-8. [مدى تحقيق أهداف المشروع الثامن](#8-مدى-تحقيق-أهداف-المشروع-الثامن)
-9. [هيكل المستودع](#9-هيكل-المستودع)
-10. [الأدوات والتقنيات](#10-الأدوات-والتقنيات)
-11. [الهدف من المشروع](#11-الهدف-من-المشروع)
+<ol dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="#1-نظرة-عامة-على-المشروع">نظرة عامة على المشروع</a>
+</li>
+<li dir="rtl" align="right"><a href="#2-التصميم-المعماري">التصميم المعماري</a>
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="#تصميم-التطبيق-ثلاثي-الطبقات">تصميم التطبيق ثلاثي الطبقات</a>
+</li>
+<li dir="rtl" align="right"><a href="#المخطط-المعماري-للمشروع">المخطط المعماري للمشروع</a>
+</li>
+</ul>
+</li>
+<li dir="rtl" align="right"><a href="#3-الضوابط-الأمنية">الضوابط الأمنية</a>
+</li>
+<li dir="rtl" align="right"><a href="#4-التجارب-العملية-للضوابط-الأمنية">التجارب العملية للضوابط الأمنية</a>
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="#التشفير">التشفير</a>
+</li>
+<li dir="rtl" align="right"><a href="#الشبكات-الخاصة">الشبكات الخاصة</a>
+</li>
+<li dir="rtl" align="right"><a href="#المراقبة-الأمنية">المراقبة الأمنية</a>
+</li>
+<li dir="rtl" align="right"><a href="#الامتثال-والمعالجة-التصحيحية">الامتثال والمعالجة التصحيحية</a>
+</li>
+</ul>
+</li>
+<li dir="rtl" align="right"><a href="#5-البنية-التحتية-بوصفها-شيفرة">البنية التحتية بوصفها شيفرة</a>
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="#دليل-مجلدات-cloudformation">دليل مجلدات CloudFormation</a>
+</li>
+<li dir="rtl" align="right"><a href="#وثائق-المشروع">وثائق المشروع</a>
+</li>
+<li dir="rtl" align="right"><a href="#أدلة-التحقق-الأمني">أدلة التحقق الأمني</a>
+</li>
+</ul>
+</li>
+<li dir="rtl" align="right"><a href="#6-المراقبة-والاستجابة-للحوادث">المراقبة والاستجابة للحوادث</a>
+</li>
+<li dir="rtl" align="right"><a href="#7-حالة-التنفيذ-والقيود">حالة التنفيذ والقيود</a>
+</li>
+<li dir="rtl" align="right"><a href="#8-مدى-تحقيق-أهداف-المشروع-الثامن">مدى تحقيق أهداف المشروع الثامن</a>
+</li>
+<li dir="rtl" align="right"><a href="#9-هيكل-المستودع">هيكل المستودع</a>
+</li>
+<li dir="rtl" align="right"><a href="#10-الأدوات-والتقنيات">الأدوات والتقنيات</a>
+</li>
+<li dir="rtl" align="right"><a href="#11-الهدف-من-المشروع">الهدف من المشروع</a>
+</li>
+</ol>
 
 **موارد إضافية:** [المخطط المعماري](#المخطط-المعماري-للمشروع) · [دليل النشر والتحقق](docs/deployment-guide.md) · [نتائج الاختبارات](tests/security-test-results.md) · [مصفوفة تحقيق المتطلبات](docs/requirements-compliance.md) · [خطة معالجة نتائج CIS](docs/cis-remediation-plan.md) · [الضوابط المتقدمة والاختبارات المتبقية](docs/advanced-security-controls.md)
 
@@ -74,14 +102,24 @@
 
 يتكون التصميم من العناصر الآتية:
 
-- **طبقة الوصول والتوزيع:** Amazon CloudFront وAWS WAF وموقع ويب مخزّن في Amazon S3.
-- **طبقة التطبيق:** Amazon API Gateway وAWS Lambda.
-- **الشبكات:** شبكة VPC تضم شبكات فرعية عامة، وشبكات خاصة للتطبيق، وشبكات معزولة لقواعد البيانات، موزعة على منطقتَي توافر (Availability Zones).
-- **البيانات:** Amazon DynamoDB، مع نقطة نهاية من نوع Gateway VPC Endpoint.
-- **التشفير:** AWS KMS وتشفير البيانات في S3، إلى جانب تجارب على تشفير موارد تخزين أخرى.
-- **الحماية والكشف:** أدوار IAM محدودة الصلاحيات، وAmazon GuardDuty، وAWS Security Hub، وAWS Config.
-- **التدقيق والمراقبة:** AWS CloudTrail وAmazon CloudWatch وAmazon SNS.
-- **المعالجة والاستجابة:** AWS Systems Manager Automation ومكوّنات مضبوطة لمعالجة نتائج الكشف الأمني.
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><strong>طبقة الوصول والتوزيع:</strong> Amazon CloudFront وAWS WAF وموقع ويب مخزّن في Amazon S3.
+</li>
+<li dir="rtl" align="right"><strong>طبقة التطبيق:</strong> Amazon API Gateway وAWS Lambda.
+</li>
+<li dir="rtl" align="right"><strong>الشبكات:</strong> شبكة VPC تضم شبكات فرعية عامة، وشبكات خاصة للتطبيق، وشبكات معزولة لقواعد البيانات، موزعة على منطقتَي توافر (Availability Zones).
+</li>
+<li dir="rtl" align="right"><strong>البيانات:</strong> Amazon DynamoDB، مع نقطة نهاية من نوع Gateway VPC Endpoint.
+</li>
+<li dir="rtl" align="right"><strong>التشفير:</strong> AWS KMS وتشفير البيانات في S3، إلى جانب تجارب على تشفير موارد تخزين أخرى.
+</li>
+<li dir="rtl" align="right"><strong>الحماية والكشف:</strong> أدوار IAM محدودة الصلاحيات، وAmazon GuardDuty، وAWS Security Hub، وAWS Config.
+</li>
+<li dir="rtl" align="right"><strong>التدقيق والمراقبة:</strong> AWS CloudTrail وAmazon CloudWatch وAmazon SNS.
+</li>
+<li dir="rtl" align="right"><strong>المعالجة والاستجابة:</strong> AWS Systems Manager Automation ومكوّنات مضبوطة لمعالجة نتائج الكشف الأمني.
+</li>
+</ul>
 
 تنفّذ دالة Lambda عمليات معاملات تجريبية على DynamoDB. وقد استُخدمت نقطة فحص الصحة (`GET /health`) للتحقق من إتاحة مسار محدد من التطبيق.
 
@@ -125,9 +163,14 @@
 ![المخطط المعماري لبنية FinServ متعددة الطبقات على AWS](architecture/finserv-aws-security-architecture.png)
 
 **الملفات الأصلية للمخطط:**
-- [المخطط القابل للتعديل باستخدام draw.io](architecture/finserv-aws-security-architecture.drawio)
-- [المخطط بصيغة Mermaid](architecture/architecture.md)
-- [المخطط المعماري بصيغة Mermaid — النسخة العربية](architecture/architecture.ar.md)
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="architecture/finserv-aws-security-architecture.drawio">المخطط القابل للتعديل باستخدام draw.io</a>
+</li>
+<li dir="rtl" align="right"><a href="architecture/architecture.md">المخطط بصيغة Mermaid</a>
+</li>
+<li dir="rtl" align="right"><a href="architecture/architecture.ar.md">المخطط المعماري بصيغة Mermaid — النسخة العربية</a>
+</li>
+</ul>
 
 ## 3. الضوابط الأمنية
 
@@ -321,19 +364,34 @@
 
 ### وثائق المشروع
 
-- [المخطط المعماري للحل](architecture/finserv-aws-security-architecture.png)
-- [دليل نشر CloudFormation والتحقق من التنفيذ](docs/deployment-guide.md)
-- [دليل نشر CloudFormation والتحقق من التنفيذ — النسخة العربية](docs/deployment-guide.ar.md)
-- [مصفوفة تحقيق متطلبات مشروع منارة الثامن](docs/requirements-compliance.md)
-- [مصفوفة تحقيق متطلبات مشروع منارة الثامن — النسخة العربية](docs/requirements-compliance.ar.md)
-- [نتائج الاختبارات والتحقق الأمني](tests/security-test-results.md)
-- [تقرير نتائج الاختبارات الأمنية — النسخة العربية](tests/security-test-results.ar.md)
-- [نتائج معيار CIS v5.0 وخطة المعالجة التصحيحية](docs/cis-remediation-plan.md)
-- [نتائج معيار CIS وخطة المعالجة — النسخة العربية](docs/cis-remediation-plan.ar.md)
-- [اختبار محاكاة حدود الصلاحيات في IAM](docs/iam-permissions-boundary-test.md)
-- [اختبار محاكاة حدود الصلاحيات في IAM — النسخة العربية](docs/iam-permissions-boundary-test.ar.md)
-- [الضوابط الأمنية المتقدمة وخطة استكمال اختبارات التحقق](docs/advanced-security-controls.md)
-- [الضوابط الأمنية المتقدمة — النسخة العربية](docs/advanced-security-controls.ar.md)
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="architecture/finserv-aws-security-architecture.png">المخطط المعماري للحل</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/deployment-guide.md">دليل نشر CloudFormation والتحقق من التنفيذ</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/deployment-guide.ar.md">دليل نشر CloudFormation والتحقق من التنفيذ — النسخة العربية</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/requirements-compliance.md">مصفوفة تحقيق متطلبات مشروع منارة الثامن</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/requirements-compliance.ar.md">مصفوفة تحقيق متطلبات مشروع منارة الثامن — النسخة العربية</a>
+</li>
+<li dir="rtl" align="right"><a href="tests/security-test-results.md">نتائج الاختبارات والتحقق الأمني</a>
+</li>
+<li dir="rtl" align="right"><a href="tests/security-test-results.ar.md">تقرير نتائج الاختبارات الأمنية — النسخة العربية</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/cis-remediation-plan.md">نتائج معيار CIS v5.0 وخطة المعالجة التصحيحية</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/cis-remediation-plan.ar.md">نتائج معيار CIS وخطة المعالجة — النسخة العربية</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/iam-permissions-boundary-test.md">اختبار محاكاة حدود الصلاحيات في IAM</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/iam-permissions-boundary-test.ar.md">اختبار محاكاة حدود الصلاحيات في IAM — النسخة العربية</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/advanced-security-controls.md">الضوابط الأمنية المتقدمة وخطة استكمال اختبارات التحقق</a>
+</li>
+<li dir="rtl" align="right"><a href="docs/advanced-security-controls.ar.md">الضوابط الأمنية المتقدمة — النسخة العربية</a>
+</li>
+</ul>
 
 ### أدلة التحقق الأمني
 
@@ -385,9 +443,14 @@
 
 يتضمن إعداد المراقبة ثلاثة إنذارات في CloudWatch:
 
-- أخطاء دالة Lambda الخاصة بالتطبيق.
-- حالات تقييد استدعاء دالة Lambda الخاصة بالتطبيق (`Throttles`).
-- أخطاء دالة Lambda المخصصة للاستجابة للحوادث.
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right">أخطاء دالة Lambda الخاصة بالتطبيق.
+</li>
+<li dir="rtl" align="right">حالات تقييد استدعاء دالة Lambda الخاصة بالتطبيق (<code>Throttles</code>).
+</li>
+<li dir="rtl" align="right">أخطاء دالة Lambda المخصصة للاستجابة للحوادث.
+</li>
+</ul>
 
 ضُبط الاحتفاظ بالسجلات في CloudWatch Logs لمدة **سبعة أيام** لدوال Lambda الخاضعة للمراقبة.
 
@@ -487,12 +550,20 @@
 
 **أهم القيود:**
 
-- كانت موارد PostgreSQL RDS وEBS المستخدمة في تجارب اليوم الثامن عشر مؤقتة، وحُذفت بعد الاختبار.
-- تم التحقق من قالب مرجعي لسياسة SCP، دون نشرها على AWS Organizations.
-- ضُبطت مجموعات قواعد AWS WAF المُدارة على وضع `Count`. ولم ينجح نشر قاعدة حظر مخصصة ضمن التجربة.
-- تعتمد بعض قوالب CloudFormation على موارد أو مخرجات قوالب سابقة، وقد ينتج عن نشرها دون مراجعة تعارض في الأسماء أو القواعد أو الموارد.
-- توثَّق اختبارات الأمان والمراقبة ومسارات التكامل بصورة مستقلة، ولا ينبغي افتراض أن جميع المسارات قد اختُبرت من بدايتها إلى نهايتها.
-- لم يخضع المختبر لتدقيق أمني رسمي أو اختبار اختراق شامل أو تقييم لجاهزيته للإنتاج؛ **ولا تُدَّعى له أي شهادة امتثال رسمية**.
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right">كانت موارد PostgreSQL RDS وEBS المستخدمة في تجارب اليوم الثامن عشر مؤقتة، وحُذفت بعد الاختبار.
+</li>
+<li dir="rtl" align="right">تم التحقق من قالب مرجعي لسياسة SCP، دون نشرها على AWS Organizations.
+</li>
+<li dir="rtl" align="right">ضُبطت مجموعات قواعد AWS WAF المُدارة على وضع <code>Count</code>. ولم ينجح نشر قاعدة حظر مخصصة ضمن التجربة.
+</li>
+<li dir="rtl" align="right">تعتمد بعض قوالب CloudFormation على موارد أو مخرجات قوالب سابقة، وقد ينتج عن نشرها دون مراجعة تعارض في الأسماء أو القواعد أو الموارد.
+</li>
+<li dir="rtl" align="right">توثَّق اختبارات الأمان والمراقبة ومسارات التكامل بصورة مستقلة، ولا ينبغي افتراض أن جميع المسارات قد اختُبرت من بدايتها إلى نهايتها.
+</li>
+<li dir="rtl" align="right">لم يخضع المختبر لتدقيق أمني رسمي أو اختبار اختراق شامل أو تقييم لجاهزيته للإنتاج؛ <strong>ولا تُدَّعى له أي شهادة امتثال رسمية</strong>.
+</li>
+</ul>
 
 ## 8. مدى تحقيق أهداف المشروع الثامن
 
@@ -554,15 +625,26 @@ AWS CloudFormation، وAWS CLI، وPowerShell، وAWS IAM، وAmazon VPC، وEC2
 
 يهدف مشروع FinServ إلى إظهار مهارات عملية في **هندسة الحلول السحابية على AWS وهندسة أمن الحوسبة السحابية**، وتشمل:
 
-- تصميم بنية تحتية سحابية آمنة.
-- إدارة الهوية والتحكم في الوصول.
-- تقسيم الشبكات وعزل مستويات الاتصال.
-- حماية البيانات بالتشفير.
-- اكتشاف التهديدات وتحليل نتائجها.
-- المراقبة والاستجابة للحوادث.
-- تقييم الامتثال وإجراء المعالجات التصحيحية.
-- بناء الموارد وإدارتها بوصفها شيفرة.
-- اختبار الضوابط الأمنية وتوثيق نتائجها وحدودها بوضوح.
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right">تصميم بنية تحتية سحابية آمنة.
+</li>
+<li dir="rtl" align="right">إدارة الهوية والتحكم في الوصول.
+</li>
+<li dir="rtl" align="right">تقسيم الشبكات وعزل مستويات الاتصال.
+</li>
+<li dir="rtl" align="right">حماية البيانات بالتشفير.
+</li>
+<li dir="rtl" align="right">اكتشاف التهديدات وتحليل نتائجها.
+</li>
+<li dir="rtl" align="right">المراقبة والاستجابة للحوادث.
+</li>
+<li dir="rtl" align="right">تقييم الامتثال وإجراء المعالجات التصحيحية.
+</li>
+<li dir="rtl" align="right">بناء الموارد وإدارتها بوصفها شيفرة.
+</li>
+<li dir="rtl" align="right">اختبار الضوابط الأمنية وتوثيق نتائجها وحدودها بوضوح.
+</li>
+</ul>
 
 **البرنامج:** مسار مهندس حلول AWS في منارة — المشروع الثامن.
 
@@ -572,4 +654,7 @@ AWS CloudFormation، وAWS CLI، وPowerShell، وAWS IAM، وAmazon VPC، وEC2
 
 *أُعدّت هذه النسخة العربية استنادًا إلى توثيق المشروع المنشور بالإنجليزية؛ وتظل ملفات الإعداد والاختبارات والأدلة الأصلية مرجعًا للتحقق من تفاصيل التنفيذ. الروابط إلى الوثائق التقنية الداخلية تقود إلى ملفاتها الإنجليزية الحالية.*
 
-- [سياسات IAM الخاصة بسجلات VPC Flow Logs — النسخة العربية](iam/README.ar.md)
+<ul dir="rtl" align="right">
+<li dir="rtl" align="right"><a href="iam/README.ar.md">سياسات IAM الخاصة بسجلات VPC Flow Logs — النسخة العربية</a>
+</li>
+</ul>
