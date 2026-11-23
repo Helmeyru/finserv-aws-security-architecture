@@ -37,6 +37,8 @@ A hands-on AWS security project demonstrating defense-in-depth, private networki
 
 ---
 
+> **Architectural note — Advanced security controls:** Some high-impact controls, including organization-wide SCP enforcement, automatic AWS Config remediation, and scheduled Lambda-based secret rotation, were intentionally not activated in this shared learning account. Their current implementation status, limitations, and safe validation procedures are documented in [Advanced Security Controls](docs/advanced-security-controls.md). These controls are not claimed as fully tested.
+
 ## 1. Project Overview
 
 This project demonstrates how to design and secure a financial-services-style application on AWS.
