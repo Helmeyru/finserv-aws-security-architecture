@@ -4,6 +4,18 @@
 
 A hands-on AWS security project demonstrating defense-in-depth, private networking, encryption, least-privilege IAM, threat detection, compliance monitoring, and Infrastructure as Code.
 
+
+## Table of Contents
+
+1. [Project Overview](#1-project-overview)
+2. [Architecture](#2-architecture)
+3. [Security Controls](#3-security-controls)
+4. [AWS Services and Implementation](#4-aws-services-and-implementation)
+5. [Infrastructure as Code](#5-infrastructure-as-code)
+6. [Monitoring and Incident Response](#6-monitoring-and-incident-response)
+7. [Security Testing and Evidence](#7-security-testing-and-evidence)
+8. [Limitations and Lessons Learned](#8-limitations-and-lessons-learned)
+
 ## 1. Project Overview
 
 This project demonstrates how to design and secure a financial-services-style application on AWS.
