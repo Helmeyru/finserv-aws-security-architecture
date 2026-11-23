@@ -4,12 +4,10 @@
 
 A hands-on AWS security project demonstrating defense-in-depth, private networking, encryption, least-privilege IAM, threat detection, compliance monitoring, and Infrastructure as Code.
 
-
 ## Table of Contents
 
 - [FinServ — Secure AWS Multi-Tier Architecture](#finserv--secure-aws-multi-tier-architecture)
   - [Table of Contents](#table-of-contents)
-    - [Additional Resources](#additional-resources)
   - [1. Project Overview](#1-project-overview)
   - [2. Architecture](#2-architecture)
   - [3. Security Controls](#3-security-controls)
@@ -31,7 +29,8 @@ A hands-on AWS security project demonstrating defense-in-depth, private networki
   - [11. Project Objective](#11-project-objective)
     - [AWS Architecture Diagram](#aws-architecture-diagram)
 
-### Additional Resources
+**Additional Resources**
+
 - [AWS Architecture Diagram](#aws-architecture-diagram)
 - [Deployment and Verification Guide](docs/deployment-guide.md)
 - [Security Testing Results](tests/security-test-results.md)
