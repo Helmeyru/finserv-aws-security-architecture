@@ -237,7 +237,7 @@ This repository documents an implemented AWS security lab rather than a producti
 | AWS Config remediation | PARTIAL | Manual SSM remediation verified; automatic remediation disabled |
 | VPC Flow Logs | VERIFIED | ACTIVE, SUCCESS, CloudWatch NODATA ingestion |
 | WAF protection | PARTIAL | Managed rules in Count mode; blocking not demonstrated |
-| IAM permission boundary | NOT DEMONSTRATED | No enforced boundary test established |
+| IAM permission boundary | VERIFIED - POLICY SIMULATION | AWS IAM Policy Simulator confirmed s3:ListBucket allowed and s3:DeleteBucket explicitly denied. [View evidence](docs/iam-permissions-boundary-test.md). No live role boundary was deployed. |
 | AWS Organizations SCP | NOT DEPLOYED | Reference template only |
 | RDS Lambda rotation | NOT DEMONSTRATED | AWS-managed RDS credentials demonstrated; custom Lambda rotation not verified |
 | EC2/RDS production tiers | NOT DEPLOYED | Serverless lab; temporary RDS test resource removed |
@@ -267,7 +267,7 @@ The matrix identifies verified implementations, partial demonstrations, and secu
 
 ## 9. Repository Structure
 
-The repository is organized into Infrastructure as Code templates, architecture diagrams, security documentation, IAM policy examples, and testing evidence.
+The repository contains CloudFormation templates, architecture diagrams, IAM policy examples, security documentation, and test evidence.
 
 ```text
 finserv-aws-security-architecture/
@@ -285,10 +285,13 @@ finserv-aws-security-architecture/
 │   ├── evidence/
 │   │   ├── aws-config-compliance-rules.png
 │   │   ├── guardduty-findings-details.png
+│   │   ├── iam-permissions-boundary-test.json
 │   │   ├── incident-response-logs.png
 │   │   └── securityhub-cis.png
+│   ├── advanced-security-controls.md
 │   ├── cis-remediation-plan.md
 │   ├── deployment-guide.md
+│   ├── iam-permissions-boundary-test.md
 │   └── requirements-compliance.md
 ├── iam/
 │   ├── flowlogs/
@@ -300,7 +303,6 @@ finserv-aws-security-architecture/
 ├── .gitignore
 └── README.md
 ```
-
 ## 10. Tools and Technologies
 
 AWS CloudFormation, AWS CLI, PowerShell, IAM, VPC, EC2 Security Groups, S3, KMS, Lambda, API Gateway, DynamoDB, CloudFront, AWS WAF, CloudTrail, AWS Config, GuardDuty, Security Hub, CloudWatch, SNS, Systems Manager, RDS, and EBS.

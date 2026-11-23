@@ -44,22 +44,34 @@ Manual execution is not evidence of automatic triggering.
 
 ## 3. IAM Permissions Boundaries
 
-**Status: NOT DEMONSTRATED**
+**Status: VERIFIED - POLICY SIMULATION; LIVE ENFORCEMENT NOT DEMONSTRATED**
 
-A permissions boundary sets the maximum permissions available through identity-based policies on an IAM user or role.
+The AWS IAM Policy Simulator was used to test an identity policy together with a permissions boundary.
 
-A proper demonstration would:
+The identity policy allowed both s3:ListBucket and s3:DeleteBucket.
 
-1. Create a narrowly scoped managed IAM policy.
-2. Apply it as a permissions boundary to a disposable test role.
-3. Attach an identity policy requesting an action outside the boundary.
-4. Test or simulate the effective permissions.
-5. Record that the action remains unavailable despite the identity policy.
+The permissions boundary allowed s3:ListBucket but explicitly denied s3:DeleteBucket.
 
-A boundary does not independently grant permissions and does not replace an SCP.
+| Action | Simulation result |
+|---|---|
+| s3:ListBucket | allowed |
+| s3:DeleteBucket | explicitDeny |
 
-No enforced permission boundary test is claimed for FinServ.
+The test confirmed that a permissions boundary can restrict an action even when the identity policy allows it.
 
+**Evidence:** [IAM Permissions Boundary Simulation](iam-permissions-boundary-test.md)
+
+**Limitation:** This was a policy simulation using a fictional S3 bucket. No real IAM role had a permissions boundary attached.
+
+A future live-enforcement test would:
+
+1. Create a disposable IAM role.
+2. Attach an identity policy.
+3. Apply a permissions boundary.
+4. Verify allowed and denied actions.
+5. Remove the test role and policies.
+
+A permissions boundary does not independently grant permissions and does not replace an SCP.
 ## 4. AWS Organizations Service Control Policies
 
 **Status: REFERENCE ONLY; NOT DEPLOYED**
