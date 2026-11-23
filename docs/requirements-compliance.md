@@ -41,7 +41,7 @@
 | CloudTrail multi-Region API auditing | Multi-Region logging, KMS encryption, management read/write events, and log-file validation verified live. S3 object-level data events not enabled. | VERIFIED - management-event auditing |
 | WAF + Shield Standard protection | CloudFront and WAF managed rules deployed in Count mode; no verified active WAF block rule | Partial; monitoring rather than active WAF blocking |
 | IAM least privilege | Scoped Lambda permissions for DynamoDB and restricted security groups reviewed | Verified for reviewed policies; not a complete IAM audit |
-| IAM permission boundaries | No successfully applied boundary established | Not demonstrated |
+| IAM permission boundaries | [IAM policy simulation](iam-permissions-boundary-test.md) verified ListBucket allowed and DeleteBucket explicitly denied; no boundary attached to a deployed IAM role | Policy simulation verified; live enforcement not demonstrated |
 | Organizations SCP deny-root policy | SCP reference/validation only; not applied to an AWS Organization | Reference only |
 | EventBridge + Lambda incident response | November 22: synthetic high-severity GuardDuty finding matched EventBridge, invoked Lambda, and produced ESCALATE; 1 invocation, 0 errors. SNS notifications remained disabled. | VERIFIED — incident processing; SNS notification not tested |
 | CloudWatch and SNS alerting | Three alarms configured, direct SNS test email received | Verified direct SNS; alarm-triggered notification untested |
