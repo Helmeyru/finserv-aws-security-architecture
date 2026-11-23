@@ -43,12 +43,32 @@
 
 أُنشئ معظم مكونات البنية التحتية باستخدام **AWS CloudFormation**، وأُجريت اختبارات التحقق باستخدام **AWS CLI** و**PowerShell**.
 
-| العنصر | الوصف |
-|---|---|
-| منطقة AWS | `us-east-1` |
-| طبيعة البيئة | مختبر تعليمي وتجريبي للتحقق من ضوابط الأمن السحابي |
-| أداة البنية التحتية بوصفها شيفرة | AWS CloudFormation |
-| إدارة التكلفة | تصميم منخفض التكلفة، مع إزالة الموارد المؤقتة القابلة للفوترة بعد الاختبارات |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>العنصر</strong></th>
+<th align="right" dir="rtl"><strong>الوصف</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl">منطقة AWS</td>
+<td align="right" dir="rtl"><code>us-east-1</code></td>
+</tr>
+<tr>
+<td align="right" dir="rtl">طبيعة البيئة</td>
+<td align="right" dir="rtl">مختبر تعليمي وتجريبي للتحقق من ضوابط الأمن السحابي</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">أداة البنية التحتية بوصفها شيفرة</td>
+<td align="right" dir="rtl">AWS CloudFormation</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">إدارة التكلفة</td>
+<td align="right" dir="rtl">تصميم منخفض التكلفة، مع إزالة الموارد المؤقتة القابلة للفوترة بعد الاختبارات</td>
+</tr>
+</tbody>
+</table>
 
 ## 2. التصميم المعماري
 
@@ -69,11 +89,32 @@
 
 يعتمد المشروع تصميمًا منطقيًا من **ثلاث طبقات** باستخدام خدمات مُدارة وبنية دون خوادم دائمة:
 
-| الطبقة | خدمات AWS | الدور |
-|---|---|---|
-| **الويب (Web)** | CloudFront وAWS WAF وحاوية S3 خاصة للموقع | تقديم محتوى الموقع وفحص الطلبات الواردة |
-| **التطبيق (Application)** | API Gateway وAWS Lambda | إتاحة نقطة فحص الصحة وتنفيذ منطق التطبيق |
-| **البيانات (Data)** | DynamoDB وGateway VPC Endpoint | تخزين المعاملات التجريبية وإتاحة الوصول إلى الخدمة عبر نقطة نهاية خاصة بالشبكة |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>الطبقة</strong></th>
+<th align="right" dir="rtl"><strong>خدمات AWS</strong></th>
+<th align="right" dir="rtl"><strong>الدور</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl"><strong>الويب (Web)</strong></td>
+<td align="right" dir="rtl">CloudFront وAWS WAF وحاوية S3 خاصة للموقع</td>
+<td align="right" dir="rtl">تقديم محتوى الموقع وفحص الطلبات الواردة</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><strong>التطبيق (Application)</strong></td>
+<td align="right" dir="rtl">API Gateway وAWS Lambda</td>
+<td align="right" dir="rtl">إتاحة نقطة فحص الصحة وتنفيذ منطق التطبيق</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><strong>البيانات (Data)</strong></td>
+<td align="right" dir="rtl">DynamoDB وGateway VPC Endpoint</td>
+<td align="right" dir="rtl">تخزين المعاملات التجريبية وإتاحة الوصول إلى الخدمة عبر نقطة نهاية خاصة بالشبكة</td>
+</tr>
+</tbody>
+</table>
 
 **ما تحقق فعليًا:** أعادت نقطة `GET /health` في API Gateway استجابة HTTP `200`. كما نجح الاستدعاء المباشر لدالة Lambda في تنفيذ عمليتَي `PutItem` و`GetItem` على DynamoDB.
 
@@ -91,29 +132,100 @@
 
 يوضح الجدول الآتي الضوابط المطبّقة أو التي جرى اختبارها ضمن حدود المشروع. ولا يعني وجود خدمة في الجدول أن جميع إمكاناتها قد فُعّلت أو اختُبرت.
 
-| المجال الأمني | ما نُفّذ أو جرى التحقق منه |
-|---|---|
-| عزل الشبكات | شبكات فرعية عامة، وخاصة بالتطبيق، ومعزولة لقواعد البيانات |
-| تقييد الاتصال | مجموعات أمان (Security Groups) ومسارات توجيه مقيدة |
-| الوصول الخاص إلى خدمات AWS | نقطة نهاية Gateway لخدمة DynamoDB |
-| حماية البيانات | تشفير S3 باستخدام AWS KMS |
-| الهوية والصلاحيات | أدوار IAM وسياسات محددة النطاق وفق مبدأ الحد الأدنى من الامتيازات |
-| اكتشاف التهديدات | Amazon GuardDuty |
-| تقييم الوضع الأمني | AWS Security Hub |
-| تقييم الامتثال | قواعد AWS Config |
-| التدقيق | AWS CloudTrail |
-| المراقبة | سجلات CloudWatch ومقاييسه وإنذاراته |
-| الإشعارات | Amazon SNS |
-| المعالجة التصحيحية | AWS Systems Manager Automation؛ تم التحقق من التنفيذ اليدوي |
-| إدارة الأسرار | جُرّب تخزين الأسرار في AWS Secrets Manager، لكن تدويرها بدالة Lambda مخصصة لم يُتحقق منه |
-| التشفير بمفتاح يديره العميل | مفتاح KMS يديره العميل لتشفير بيانات S3، مستقل عن مفتاح AWS المُدار المستخدم افتراضيًا لتشفير EBS |
-| منع الوصول العام إلى S3 | التحقق من إعدادات Block Public Access على مستوى الحاويات الثماني والحساب |
-| التشفير الافتراضي لـ EBS | مفعّل في `us-east-1` باستخدام `alias/aws/ebs` |
-| CloudFront وWAF | مصدر ويب خاص في S3 عبر CloudFront؛ عملت مجموعات قواعد WAF المُدارة في وضع **Count** |
-| معالجة نتائج الكشف | أدت نتيجة GuardDuty اصطناعية إلى تشغيل EventBridge وLambda؛ وتأكد قرار `ESCALATE` دون التحقق من إشعار SNS التلقائي |
-| تقييم CIS الأمني | تفعيل معيار CIS AWS Foundations Benchmark v5.0؛ تفعيل 40 عنصر تحكم؛ نتيجة 38% (نجح 15 وفشل 11 في التقييم الموثق)، **دون ادعاء امتثال كامل** |
-| تسجيل حركة مرور الشبكة | أرسلت VPC Flow Logs الخاصة بالمشروع سجلات `NODATA` إلى CloudWatch؛ مدة الاحتفاظ سبعة أيام |
-| سلامة سجلات CloudTrail | التحقق من تدقيق أحداث الإدارة في مناطق متعددة، وتشفير السجلات باستخدام KMS، والتحقق من سلامة ملفات السجل |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>المجال الأمني</strong></th>
+<th align="right" dir="rtl"><strong>ما نُفّذ أو جرى التحقق منه</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl">عزل الشبكات</td>
+<td align="right" dir="rtl">شبكات فرعية عامة، وخاصة بالتطبيق، ومعزولة لقواعد البيانات</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تقييد الاتصال</td>
+<td align="right" dir="rtl">مجموعات أمان (Security Groups) ومسارات توجيه مقيدة</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">الوصول الخاص إلى خدمات AWS</td>
+<td align="right" dir="rtl">نقطة نهاية Gateway لخدمة DynamoDB</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">حماية البيانات</td>
+<td align="right" dir="rtl">تشفير S3 باستخدام AWS KMS</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">الهوية والصلاحيات</td>
+<td align="right" dir="rtl">أدوار IAM وسياسات محددة النطاق وفق مبدأ الحد الأدنى من الامتيازات</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">اكتشاف التهديدات</td>
+<td align="right" dir="rtl">Amazon GuardDuty</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تقييم الوضع الأمني</td>
+<td align="right" dir="rtl">AWS Security Hub</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تقييم الامتثال</td>
+<td align="right" dir="rtl">قواعد AWS Config</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">التدقيق</td>
+<td align="right" dir="rtl">AWS CloudTrail</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">المراقبة</td>
+<td align="right" dir="rtl">سجلات CloudWatch ومقاييسه وإنذاراته</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">الإشعارات</td>
+<td align="right" dir="rtl">Amazon SNS</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">المعالجة التصحيحية</td>
+<td align="right" dir="rtl">AWS Systems Manager Automation؛ تم التحقق من التنفيذ اليدوي</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">إدارة الأسرار</td>
+<td align="right" dir="rtl">جُرّب تخزين الأسرار في AWS Secrets Manager، لكن تدويرها بدالة Lambda مخصصة لم يُتحقق منه</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">التشفير بمفتاح يديره العميل</td>
+<td align="right" dir="rtl">مفتاح KMS يديره العميل لتشفير بيانات S3، مستقل عن مفتاح AWS المُدار المستخدم افتراضيًا لتشفير EBS</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">منع الوصول العام إلى S3</td>
+<td align="right" dir="rtl">التحقق من إعدادات Block Public Access على مستوى الحاويات الثماني والحساب</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">التشفير الافتراضي لـ EBS</td>
+<td align="right" dir="rtl">مفعّل في <code>us-east-1</code> باستخدام <code>alias/aws/ebs</code></td>
+</tr>
+<tr>
+<td align="right" dir="rtl">CloudFront وWAF</td>
+<td align="right" dir="rtl">مصدر ويب خاص في S3 عبر CloudFront؛ عملت مجموعات قواعد WAF المُدارة في وضع <strong>Count</strong></td>
+</tr>
+<tr>
+<td align="right" dir="rtl">معالجة نتائج الكشف</td>
+<td align="right" dir="rtl">أدت نتيجة GuardDuty اصطناعية إلى تشغيل EventBridge وLambda؛ وتأكد قرار <code>ESCALATE</code> دون التحقق من إشعار SNS التلقائي</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تقييم CIS الأمني</td>
+<td align="right" dir="rtl">تفعيل معيار CIS AWS Foundations Benchmark v5.0؛ تفعيل 40 عنصر تحكم؛ نتيجة 38% (نجح 15 وفشل 11 في التقييم الموثق)، <strong>دون ادعاء امتثال كامل</strong></td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تسجيل حركة مرور الشبكة</td>
+<td align="right" dir="rtl">أرسلت VPC Flow Logs الخاصة بالمشروع سجلات <code>NODATA</code> إلى CloudWatch؛ مدة الاحتفاظ سبعة أيام</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">سلامة سجلات CloudTrail</td>
+<td align="right" dir="rtl">التحقق من تدقيق أحداث الإدارة في مناطق متعددة، وتشفير السجلات باستخدام KMS، والتحقق من سلامة ملفات السجل</td>
+</tr>
+</tbody>
+</table>
 
 ## 4. التجارب العملية للضوابط الأمنية
 
@@ -153,18 +265,56 @@
 
 ### دليل مجلدات CloudFormation
 
-| المجلد | الغرض الرئيسي |
-|---|---|
-| الجذر / `Recovered-Templates` | تأسيس الشبكة ومجموعات الأمان وتشفير KMS/S3 |
-| `Day 04–05` | ضوابط الوصول عبر IAM وSecrets Manager |
-| `Day 06–07` | التدقيق باستخدام CloudTrail وإعداد AWS Config |
-| `Day 08–09` | GuardDuty وSecurity Hub |
-| `Day 10–11` | الاستجابة للحوادث باستخدام EventBridge/Lambda وتنبيهات SNS |
-| `Day 12–15` | طبقات الويب والتطبيق والبيانات والوصول إلى DynamoDB وواجهة API |
-| `Day 16` | المعالجة التصحيحية عبر AWS Config وSSM Automation |
-| `Day 17` | ضوابط AWS WAF المرتبطة بـ CloudFront |
-| `Day 18` | تجارب EBS/RDS المؤقتة ومرجع سياسة SCP |
-| `Day 19` | المراقبة والإنذارات باستخدام CloudWatch |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>المجلد</strong></th>
+<th align="right" dir="rtl"><strong>الغرض الرئيسي</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl">الجذر / <code>Recovered-Templates</code></td>
+<td align="right" dir="rtl">تأسيس الشبكة ومجموعات الأمان وتشفير KMS/S3</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 04–05</code></td>
+<td align="right" dir="rtl">ضوابط الوصول عبر IAM وSecrets Manager</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 06–07</code></td>
+<td align="right" dir="rtl">التدقيق باستخدام CloudTrail وإعداد AWS Config</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 08–09</code></td>
+<td align="right" dir="rtl">GuardDuty وSecurity Hub</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 10–11</code></td>
+<td align="right" dir="rtl">الاستجابة للحوادث باستخدام EventBridge/Lambda وتنبيهات SNS</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 12–15</code></td>
+<td align="right" dir="rtl">طبقات الويب والتطبيق والبيانات والوصول إلى DynamoDB وواجهة API</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 16</code></td>
+<td align="right" dir="rtl">المعالجة التصحيحية عبر AWS Config وSSM Automation</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 17</code></td>
+<td align="right" dir="rtl">ضوابط AWS WAF المرتبطة بـ CloudFront</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 18</code></td>
+<td align="right" dir="rtl">تجارب EBS/RDS المؤقتة ومرجع سياسة SCP</td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><code>Day 19</code></td>
+<td align="right" dir="rtl">المراقبة والإنذارات باستخدام CloudWatch</td>
+</tr>
+</tbody>
+</table>
 
 اجتازت **قوالب YAML الثمانية والعشرون** اختبار `aws cloudformation validate-template` بتاريخ **22 نوفمبر 2026**. ويؤكد ذلك صحة بنية القوالب ضمن نطاق الفحص، **ولا يثبت** إمكانية نشر المشروع كاملًا من البداية في حساب جديد دون إعدادات إضافية.
 
@@ -182,15 +332,43 @@
 
 التُقطت صور الأدلة من وحدة تحكم AWS بتاريخ **22 نوفمبر 2026**. نتائج GuardDuty المعروضة اصطناعية لأغراض الاختبار، وتعكس نتائج الامتثال حالة الحساب التي لوحظت عند الفحص.
 
-| اكتشاف التهديدات | الاستجابة للحوادث |
-|---|---|
-| <img src="docs/evidence/guardduty-findings-details.png" alt="نتيجة GuardDuty اصطناعية من نوع Backdoor C&C" width="420"> | <img src="docs/evidence/incident-response-logs.png" alt="سجل استجابة Lambda للحوادث وقرار ESCALATE" width="420"> |
-| **GuardDuty:** نتيجة اصطناعية عالية الخطورة من نوع Backdoor C&C | **Lambda:** تسجيل قرار `ESCALATE`؛ لم يُرسل إشعار SNS تلقائيًا في الاختبار |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>اكتشاف التهديدات</strong></th>
+<th align="right" dir="rtl"><strong>الاستجابة للحوادث</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl"><img src="docs/evidence/guardduty-findings-details.png" alt="نتيجة GuardDuty اصطناعية من نوع Backdoor C&C" width="420"></td>
+<td align="right" dir="rtl"><img src="docs/evidence/incident-response-logs.png" alt="سجل استجابة Lambda للحوادث وقرار ESCALATE" width="420"></td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><strong>GuardDuty:</strong> نتيجة اصطناعية عالية الخطورة من نوع Backdoor C&amp;C</td>
+<td align="right" dir="rtl"><strong>Lambda:</strong> تسجيل قرار <code>ESCALATE</code>؛ لم يُرسل إشعار SNS تلقائيًا في الاختبار</td>
+</tr>
+</tbody>
+</table>
 
-| الامتثال في AWS Config | تقييم CIS في Security Hub |
-|---|---|
-| <img src="docs/evidence/aws-config-compliance-rules.png" alt="ثلاث قواعد AWS Config متوافقة" width="420"> | <img src="docs/evidence/securityhub-cis.png" alt="نتيجة تقييم CIS AWS Foundations Benchmark v5.0" width="420"> |
-| **AWS Config:** ثلاث قواعد متوافقة ضمن المشروع؛ وتجهيز معالجة يدوية عبر SSM | **Security Hub:** معيار CIS v5.0، ونتيجة 38%، و15 عنصرًا ناجحًا و11 عنصرًا فاشلًا في التقييم الموثّق |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>الامتثال في AWS Config</strong></th>
+<th align="right" dir="rtl"><strong>تقييم CIS في Security Hub</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl"><img src="docs/evidence/aws-config-compliance-rules.png" alt="ثلاث قواعد AWS Config متوافقة" width="420"></td>
+<td align="right" dir="rtl"><img src="docs/evidence/securityhub-cis.png" alt="نتيجة تقييم CIS AWS Foundations Benchmark v5.0" width="420"></td>
+</tr>
+<tr>
+<td align="right" dir="rtl"><strong>AWS Config:</strong> ثلاث قواعد متوافقة ضمن المشروع؛ وتجهيز معالجة يدوية عبر SSM</td>
+<td align="right" dir="rtl"><strong>Security Hub:</strong> معيار CIS v5.0، ونتيجة 38%، و15 عنصرًا ناجحًا و11 عنصرًا فاشلًا في التقييم الموثّق</td>
+</tr>
+</tbody>
+</table>
 
 **تنبيه بشأن نتائج GuardDuty:** قد يؤدي توليد نتائج الاختبار الاصطناعية إلى ظهور عدد كبير من النتائج. ولا يجوز تفسير الرقم **479** الظاهر في لقطة الشاشة على أنه 479 هجومًا حقيقيًا أو حادثًا أمنيًا مؤكدًا.
 
@@ -218,22 +396,87 @@
 
 ### ملخص حالة التنفيذ
 
-| هدف المشروع | الحالة | الدليل أو حدود التحقق |
-|---|---|---|
-| شبكة VPC متعددة الطبقات ومجموعات الأمان | **مُتحقَّق منه** | تصميم شبكات عامة وخاصة بالتطبيق ومعزولة لقواعد البيانات |
-| تشفير S3 باستخدام KMS | **مُتحقَّق منه** | استخدام مفتاح يديره العميل واختبار SSE-KMS |
-| Secrets Manager | **جزئي** | تجربة تخزين الأسرار؛ عدم التحقق من تدويرها باستخدام Lambda مخصصة |
-| اكتشاف التهديدات عبر GuardDuty | **مُتحقَّق منه** | نتائج اصطناعية من نوع Tor وBackdoor C&C |
-| استجابة EventBridge وLambda | **مُتحقَّق منه** | نتيجة اصطناعية بدرجة خطورة 8، واستدعاء واحد، وصفر أخطاء، وقرار `ESCALATE` |
-| تقييم Security Hub وفق CIS v5.0 | **جزئي** | 40 عنصرًا مفعّلًا؛ نتيجة 38% (15 نجح، 11 فشل) بتاريخ 22 نوفمبر 2026؛ لا يُدّعى امتثال كامل |
-| تدقيق CloudTrail وسلامة السجلات | **مُتحقَّق منه** | أحداث إدارة عبر مناطق متعددة والتحقق من سلامة ملفات السجل |
-| المعالجة التصحيحية في AWS Config | **جزئي** | نجاح تشغيل SSM يدويًا؛ المعالجة التلقائية معطّلة |
-| VPC Flow Logs | **مُتحقَّق منه ضمن نطاق الاختبار** | الحالة `ACTIVE` والتسليم `SUCCESS` ووصول سجلات `NODATA` إلى CloudWatch، دون إثبات التقاط حركة `ACCEPT/REJECT` |
-| الحماية باستخدام AWS WAF | **جزئي** | قواعد مُدارة في وضع `Count`؛ لم يثبت الحظر الفعلي |
-| حدود صلاحيات IAM (Permissions Boundary) | **مُتحقَّق منه بالمحاكاة فقط** | أظهر محاكي IAM السماح بـ `s3:ListBucket` والمنع الصريح لـ `s3:DeleteBucket`؛ [دليل المحاكاة](docs/iam-permissions-boundary-test.md). لم تُطبّق السياسة على دور فعلي |
-| سياسات AWS Organizations من نوع SCP | **غير منشورة** | قالب مرجعي فقط، دون إثبات فرض السياسة على مؤسسة AWS |
-| تدوير أسرار RDS عبر Lambda | **لم يُتحقَّق منه** | تجربة بيانات اعتماد RDS المُدارة عبر AWS، دون اختبار دورة تدوير باستخدام Lambda مخصصة |
-| طبقات EC2/RDS الإنتاجية | **غير منشورة** | التطبيق يعمل دون خوادم دائمة، وقد أُزيل مورد RDS المؤقت بعد الاختبار |
+<table dir="rtl">
+<thead>
+<tr>
+<th align="right" dir="rtl"><strong>هدف المشروع</strong></th>
+<th align="right" dir="rtl"><strong>الحالة</strong></th>
+<th align="right" dir="rtl"><strong>الدليل أو حدود التحقق</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right" dir="rtl">شبكة VPC متعددة الطبقات ومجموعات الأمان</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه</strong></td>
+<td align="right" dir="rtl">تصميم شبكات عامة وخاصة بالتطبيق ومعزولة لقواعد البيانات</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تشفير S3 باستخدام KMS</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه</strong></td>
+<td align="right" dir="rtl">استخدام مفتاح يديره العميل واختبار SSE-KMS</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">Secrets Manager</td>
+<td align="right" dir="rtl"><strong>جزئي</strong></td>
+<td align="right" dir="rtl">تجربة تخزين الأسرار؛ عدم التحقق من تدويرها باستخدام Lambda مخصصة</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">اكتشاف التهديدات عبر GuardDuty</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه</strong></td>
+<td align="right" dir="rtl">نتائج اصطناعية من نوع Tor وBackdoor C&amp;C</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">استجابة EventBridge وLambda</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه</strong></td>
+<td align="right" dir="rtl">نتيجة اصطناعية بدرجة خطورة 8، واستدعاء واحد، وصفر أخطاء، وقرار <code>ESCALATE</code></td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تقييم Security Hub وفق CIS v5.0</td>
+<td align="right" dir="rtl"><strong>جزئي</strong></td>
+<td align="right" dir="rtl">40 عنصرًا مفعّلًا؛ نتيجة 38% (15 نجح، 11 فشل) بتاريخ 22 نوفمبر 2026؛ لا يُدّعى امتثال كامل</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تدقيق CloudTrail وسلامة السجلات</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه</strong></td>
+<td align="right" dir="rtl">أحداث إدارة عبر مناطق متعددة والتحقق من سلامة ملفات السجل</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">المعالجة التصحيحية في AWS Config</td>
+<td align="right" dir="rtl"><strong>جزئي</strong></td>
+<td align="right" dir="rtl">نجاح تشغيل SSM يدويًا؛ المعالجة التلقائية معطّلة</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">VPC Flow Logs</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه ضمن نطاق الاختبار</strong></td>
+<td align="right" dir="rtl">الحالة <code>ACTIVE</code> والتسليم <code>SUCCESS</code> ووصول سجلات <code>NODATA</code> إلى CloudWatch، دون إثبات التقاط حركة <code>ACCEPT/REJECT</code></td>
+</tr>
+<tr>
+<td align="right" dir="rtl">الحماية باستخدام AWS WAF</td>
+<td align="right" dir="rtl"><strong>جزئي</strong></td>
+<td align="right" dir="rtl">قواعد مُدارة في وضع <code>Count</code>؛ لم يثبت الحظر الفعلي</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">حدود صلاحيات IAM (Permissions Boundary)</td>
+<td align="right" dir="rtl"><strong>مُتحقَّق منه بالمحاكاة فقط</strong></td>
+<td align="right" dir="rtl">أظهر محاكي IAM السماح بـ <code>s3:ListBucket</code> والمنع الصريح لـ <code>s3:DeleteBucket</code>؛ <a href="docs/iam-permissions-boundary-test.md">دليل المحاكاة</a>. لم تُطبّق السياسة على دور فعلي</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">سياسات AWS Organizations من نوع SCP</td>
+<td align="right" dir="rtl"><strong>غير منشورة</strong></td>
+<td align="right" dir="rtl">قالب مرجعي فقط، دون إثبات فرض السياسة على مؤسسة AWS</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">تدوير أسرار RDS عبر Lambda</td>
+<td align="right" dir="rtl"><strong>لم يُتحقَّق منه</strong></td>
+<td align="right" dir="rtl">تجربة بيانات اعتماد RDS المُدارة عبر AWS، دون اختبار دورة تدوير باستخدام Lambda مخصصة</td>
+</tr>
+<tr>
+<td align="right" dir="rtl">طبقات EC2/RDS الإنتاجية</td>
+<td align="right" dir="rtl"><strong>غير منشورة</strong></td>
+<td align="right" dir="rtl">التطبيق يعمل دون خوادم دائمة، وقد أُزيل مورد RDS المؤقت بعد الاختبار</td>
+</tr>
+</tbody>
+</table>
 
 **أهم القيود:**
 
